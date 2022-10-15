@@ -75,9 +75,4 @@ public class YamlArtifactFileParser implements ArtifactFileParser {
                 Collections.emptyList()
         );
     }
-
-    public static void main(String[] args) {
-        var test = new YamlArtifactFileParser().parse(Path.of("/home/kevin/test.yaml"));
-        System.out.println(test);
-    }
 }
