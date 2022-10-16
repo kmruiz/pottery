@@ -1,0 +1,17 @@
+parameters:
+  junit.version: "5.9.1"
+
+artifact:
+  group:    "cat.pottery"
+  id:       "pottery"
+  version:  "0.0.1"
+
+  platform:
+    version: "18"
+    produces: "fatjar"
+
+  dependencies:
+    - production: "org.yaml:snakeyaml:1.33"
+    - test: "org.junit.jupiter:junit-jupiter-api:${junit.version}"
+  
+    
