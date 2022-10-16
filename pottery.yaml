@@ -9,7 +9,7 @@ artifact:
 
   platform:
     version: "17"
-    produces: "fatjar"
+    produces: "container"
 
   manifest:
     main-class: "cat.pottery.ui.cli.Bootstrap"

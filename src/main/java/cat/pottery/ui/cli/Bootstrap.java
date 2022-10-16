@@ -5,6 +5,7 @@ import cat.pottery.engine.dependencies.DependencyResolver;
 import cat.pottery.engine.dependencies.DownloadManager;
 import cat.pottery.engine.dependencies.maven.MavenDependency;
 import cat.pottery.engine.output.ArtifactOutput;
+import cat.pottery.engine.output.container.ContainerArtifactOutput;
 import cat.pottery.engine.output.fatJar.FatJarArtifactOutput;
 import cat.pottery.engine.output.nativeImage.NativeImageArtifactOutput;
 import cat.pottery.engine.toolchain.Toolchain;
@@ -29,14 +30,14 @@ public final class Bootstrap {
         var compiler = new IncrementalCompiler(Toolchain.systemDefault());
         var process = compiler.compileTree(artifactDoc.document(), Path.of("src", "main", "java").toAbsolutePath(), Path.of("target", "classes").toAbsolutePath(), deps);
 
-        if (process == null) {
-            return;
+        if (process != null) {
+            process.waitFor();
         }
 
-        process.waitFor();
         ArtifactOutput artifactOutput = switch (artifactDoc.document().artifact().platform().produces().toLowerCase()) {
             case "fatjar" -> new FatJarArtifactOutput(Toolchain.systemDefault());
             case "native" -> new NativeImageArtifactOutput(Toolchain.systemDefault(), new FatJarArtifactOutput(Toolchain.systemDefault()));
+            case "container" -> new ContainerArtifactOutput(Toolchain.systemDefault(), new FatJarArtifactOutput(Toolchain.systemDefault()));
             default -> throw new Error();
         };
 

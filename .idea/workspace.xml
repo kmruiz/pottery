@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Some optimizations">
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/nativeImage/NativeImageArtifactOutput.java" afterDir="false" />
+    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="now supports generating native images">
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/container/ContainerArtifactOutput.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pottery.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pottery.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/compiler/IncrementalCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/compiler/IncrementalCompiler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/nativeImage/NativeImageArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/nativeImage/NativeImageArtifactOutput.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/Bootstrap.java" afterDir="false" />
     </list>
@@ -64,8 +62,9 @@
   <component name="RunManager">
     <configuration name="Bootstrap" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
-        <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
         <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
+        <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
+        <env name="CONTAINER_BUILDER" value="podman" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
       <module name="pottery" />
@@ -93,7 +92,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1665864897567</updated>
-      <workItem from="1665864898702" duration="17557000" />
+      <workItem from="1665864898702" duration="18769000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -130,7 +129,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665882938739</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="now supports generating native images">
+      <created>1665884991353</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1665884991353</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -152,7 +158,8 @@
     <MESSAGE value="Yeah parameters on deps" />
     <MESSAGE value="Now can generate fatJar without optimization" />
     <MESSAGE value="Some optimizations" />
-    <option name="LAST_COMMIT_MESSAGE" value="Some optimizations" />
+    <MESSAGE value="now supports generating native images" />
+    <option name="LAST_COMMIT_MESSAGE" value="now supports generating native images" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

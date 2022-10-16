@@ -36,7 +36,6 @@ public class NativeImageArtifactOutput implements ArtifactOutput {
                 outputImage.toString()
         ));
 
-
         try {
             var process = Runtime.getRuntime().exec(cmd.toArray(String[]::new));
             process.waitFor();

@@ -1,20 +1,22 @@
 package cat.pottery.engine.toolchain;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 public final class Toolchain {
     private final Path toolchainPath;
     private final Path graalvmPath;
+    private final Path containerBuilder;
 
-    public Toolchain(Path toolchainPath, Path graalvmPath) {
+    public Toolchain(Path toolchainPath, Path graalvmPath, Path containerBuilder) {
         this.toolchainPath = toolchainPath;
         this.graalvmPath = graalvmPath;
+        this.containerBuilder = containerBuilder;
     }
 
     public static Toolchain systemDefault() {
         String javaHome = System.getenv("JAVA_HOME");
         String graalvmHome = System.getenv("GRAALVM_HOME");
+        String containerBuilder = System.getenv("CONTAINER_BUILDER");
 
         if (javaHome == null) {
             javaHome = graalvmHome;
@@ -24,7 +26,7 @@ public final class Toolchain {
             throw new Error();
         }
 
-        return new Toolchain(Path.of(javaHome), Path.of(graalvmHome));
+        return new Toolchain(Path.of(javaHome), Path.of(graalvmHome), Path.of(containerBuilder));
     }
 
     public Path javac() {
@@ -32,6 +34,9 @@ public final class Toolchain {
     }
     public Path graalvmNative() {
         return graalvmPath.resolve("bin").resolve("native-image");
+    }
+    public Path containerBuilder() {
+        return containerBuilder;
     }
 
     public String javacVersion() {
