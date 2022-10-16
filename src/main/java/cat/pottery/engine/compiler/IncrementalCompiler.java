@@ -31,11 +31,12 @@ public final class IncrementalCompiler {
             Files.walkFileTree(sourceCode, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    var relativeToSource = file.toString().replace(sourceCode + "/", "");
+                    var classFileName = relativeToSource.replace(".java", ".class");
+                    var classFile = targetDirectory.resolve(classFileName);
+
                     if (file.toString().endsWith(".java")) {
                         // check if needs to be compiled
-                        var relativeToSource = file.toString().replace(sourceCode + "/", "");
-                        var classFileName = relativeToSource.replace(".java", ".class");
-                        var classFile = targetDirectory.resolve(classFileName);
 
                         if (!classFile.toFile().exists()) {
                             filesToCompile.add(new CompilationUnit(file, classFile));
@@ -51,9 +52,6 @@ public final class IncrementalCompiler {
                             }
                         }
                     } else {
-                        var relativeToSource = file.toString().replace(sourceCode + "/", "");
-                        var classFileName = relativeToSource.replace(".java", ".class");
-                        var classFile = targetDirectory.resolve(classFileName);
 
                         if (!classFile.toFile().exists()) { // it's a resource, just copy it
                             try {
@@ -93,11 +91,7 @@ public final class IncrementalCompiler {
 
         var cmd = new LinkedList<>(List.of(
                 toolchain.javac().toString(),
-                "-source",
-                artifactDocument.artifact().platform().version(),
-                "-target",
-                artifactDocument.artifact().platform().version(),
-                "-release",
+                "--release",
                 artifactDocument.artifact().platform().version(),
                 "-cp",
                 classpath,

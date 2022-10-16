@@ -8,7 +8,7 @@ artifact:
   version:  "0.0.1"
 
   platform:
-    version: "18"
+    version: "17"
     produces: "fatjar"
 
   manifest:

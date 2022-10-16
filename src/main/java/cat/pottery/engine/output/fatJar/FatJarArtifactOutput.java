@@ -2,6 +2,7 @@ package cat.pottery.engine.output.fatJar;
 
 import cat.pottery.engine.dependencies.maven.DownloadedDependency;
 import cat.pottery.engine.output.ArtifactOutput;
+import cat.pottery.engine.toolchain.Toolchain;
 import cat.pottery.ui.artifact.ArtifactDocument;
 
 import java.io.*;
@@ -11,11 +12,18 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public final class FatJarArtifactOutput implements ArtifactOutput {
+    private final Toolchain toolchain;
+
+    public FatJarArtifactOutput(Toolchain toolchain) {
+        this.toolchain = toolchain;
+    }
+
     @Override
     public void generateArtifact(ArtifactDocument artifactDocument, Path compilerOutput, List<DownloadedDependency> classPath, Path outputPath) {
         var outputFile = outputPath.resolve(artifactDocument.artifact().id() + "-" + artifactDocument.artifact().version() + "-fat.jar-tmp");
@@ -83,13 +91,19 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
             try {
                 out.putNextEntry(manifest);
                 out.write("""
-                    Manifest-Version: 1.0
-                    Created-By: Apache Maven 3.8.1
-                    Built-By: kevin
-                    Build-Jdk: 18.0.1
-                    Class-Path: snakeyaml-1.33.jar
-                    Main-Class: %s
-                    """.formatted(artifactDocument.artifact().manifest().mainClass()).getBytes());
+                        Manifest-Version: 1.0
+                        Created-By: cat.pottery %s
+                        Built-By: %s
+                        Build-Jdk: %s
+                        Class-Path: %s
+                        Main-Class: %s
+                        """.formatted(
+                        toolchain.potteryVersion(),
+                        toolchain.currentUser(),
+                        toolchain.javacVersion(),
+                        classPath.stream().map(e -> e.downloadPath().getFileName().toString()).collect(Collectors.joining(" ")),
+                        artifactDocument.artifact().manifest().mainClass()
+                ).getBytes());
                 out.closeEntry();
                 out.close();
                 Files.move(outputFile, outputFileFinal);
@@ -104,6 +118,5 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
                 throw new RuntimeException(e);
             }
         }
-
     }
 }
