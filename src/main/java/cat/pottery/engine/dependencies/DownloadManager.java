@@ -23,6 +23,10 @@ public final class DownloadManager {
     }
 
     public void trackDependency(MavenDependency dependency) {
+        if (dependency.scope() == MavenDependency.Scope.TEST) {
+            return;
+        }
+
         var qname = "%s:%s".formatted(dependency.groupId(), dependency.artifactId());
         var versionsOfDep = foundVersionsPerArtifact.getOrDefault(qname, new HashSet<>());
 

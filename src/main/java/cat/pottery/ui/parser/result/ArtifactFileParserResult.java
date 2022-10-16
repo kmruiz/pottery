@@ -1,7 +1,6 @@
 package cat.pottery.ui.parser.result;
 
-import cat.pottery.ui.ArtifactDocument;
-import cat.pottery.ui.artifact.Artifact;
+import cat.pottery.ui.artifact.ArtifactDocument;
 
 import java.util.List;
 

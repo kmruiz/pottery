@@ -1,6 +1,6 @@
 package cat.pottery.ui.parser;
 
-import cat.pottery.ui.ArtifactDocument;
+import cat.pottery.ui.artifact.ArtifactDocument;
 import cat.pottery.ui.artifact.Artifact;
 import cat.pottery.ui.artifact.Dependency;
 import cat.pottery.ui.artifact.Platform;

@@ -4,16 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Parse simple yaml">
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyDownloadWorker.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyResolver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DownloadManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/maven/DownloadedDependency.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/maven/MavenBOM.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/maven/MavenDependency.java" afterDir="false" />
+    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Yeah parameters on deps">
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/compiler/IncrementalCompiler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/ArtifactOutput.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/Bootstrap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/ArtifactDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/ArtifactDocument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyResolver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DownloadManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DownloadManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/ArtifactDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/ArtifactDocument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/Dependency.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/Dependency.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/YamlArtifactFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/YamlArtifactFileParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/result/ArtifactFileParserResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/result/ArtifactFileParserResult.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,12 +67,15 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="DependencyResolver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="cat.pottery.engine.dependencies.DependencyResolver" />
+    <configuration name="Bootstrap" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <envs>
+        <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
       <module name="pottery" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="cat.pottery.engine.dependencies.*" />
+          <option name="PATTERN" value="cat.pottery.ui.cli.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -78,7 +85,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.DependencyResolver" />
+        <item itemvalue="Application.Bootstrap" />
       </list>
     </recent_temporary>
   </component>
@@ -90,7 +97,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1665864897567</updated>
-      <workItem from="1665864898702" duration="9705000" />
+      <workItem from="1665864898702" duration="14155000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -99,7 +106,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665867366001</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Yeah parameters on deps">
+      <created>1665877074683</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1665877074683</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -118,31 +132,14 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Parse simple yaml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Parse simple yaml" />
+    <MESSAGE value="Yeah parameters on deps" />
+    <option name="LAST_COMMIT_MESSAGE" value="Yeah parameters on deps" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/YamlArtifactFileParser.java</url>
-          <line>33</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DownloadManager.java</url>
-          <line>35</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DownloadManager.java</url>
-          <line>56</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="node.getNodeName()" language="JAVA" />
+        <watch expression="attrs.lastModifiedTime()" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

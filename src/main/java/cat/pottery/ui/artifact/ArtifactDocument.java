@@ -1,4 +1,4 @@
-package cat.pottery.ui;
+package cat.pottery.ui.artifact;
 
 import cat.pottery.ui.artifact.Artifact;
 import cat.pottery.ui.artifact.Dependency;
