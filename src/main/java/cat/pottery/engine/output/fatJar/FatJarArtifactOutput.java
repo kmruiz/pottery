@@ -26,6 +26,7 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
 
         try {
             Files.createDirectories(outputFile.getParent());
+            Files.createDirectories(compilerOutput.getParent());
             Files.deleteIfExists(outputFileFinal);
             zos = new ZipOutputStream(new FileOutputStream(outputFile.toFile()));
         } catch (Exception e) {
@@ -57,6 +58,10 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
             Files.walkFileTree(compilerOutput, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (!file.toFile().isFile()) {
+                        return FileVisitResult.CONTINUE;
+                    }
+
                     if (file.endsWith("META-INF/MANIFEST.MF")) {
                         hasManifest[0] = true;
                     }
@@ -69,8 +74,8 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
                     return FileVisitResult.CONTINUE;
                 }
             });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Throwable ex) {
+            throw new RuntimeException(ex);
         }
         // now add the manifest
         if (!hasManifest[0]) {
@@ -83,8 +88,8 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
                     Built-By: kevin
                     Build-Jdk: 18.0.1
                     Class-Path: snakeyaml-1.33.jar
-                    Main-Class: cat.pottery.ui.cli.Bootstrap
-                    """.getBytes());
+                    Main-Class: %s
+                    """.formatted(artifactDocument.artifact().manifest().mainClass()).getBytes());
                 out.closeEntry();
                 out.close();
                 Files.move(outputFile, outputFileFinal);

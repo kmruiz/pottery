@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public final class Bootstrap {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         var queue = new ArrayBlockingQueue<MavenDependency>(128);
         var manager = new DownloadManager(queue, new HashMap<>(), 4);
 
@@ -23,7 +23,13 @@ public final class Bootstrap {
 
         var deps = dependencyResolver.downloadDependenciesOfArtifact(artifactDoc.document());
         var compiler = new IncrementalCompiler(Toolchain.systemDefault());
-        compiler.compileTree(Path.of("src", "main", "java").toAbsolutePath(), Path.of("target", "classes").toAbsolutePath(), deps);
+        var process = compiler.compileTree(artifactDoc.document(), Path.of("src", "main", "java").toAbsolutePath(), Path.of("target", "classes").toAbsolutePath(), deps);
+
+        if (process == null) {
+            return;
+        }
+
+        process.waitFor();
 
         var artifactOutput = new FatJarArtifactOutput();
         artifactOutput.generateArtifact(

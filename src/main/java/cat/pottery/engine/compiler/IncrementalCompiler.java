@@ -2,6 +2,7 @@ package cat.pottery.engine.compiler;
 
 import cat.pottery.engine.dependencies.maven.DownloadedDependency;
 import cat.pottery.engine.toolchain.Toolchain;
+import cat.pottery.ui.artifact.ArtifactDocument;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -22,7 +23,7 @@ public final class IncrementalCompiler {
 
     private record CompilationUnit(Path javaClass, Path classFile) {}
 
-    public void compileTree(Path sourceCode, Path targetDirectory, List<DownloadedDependency> dependencies) {
+    public Process compileTree(ArtifactDocument artifactDocument, Path sourceCode, Path targetDirectory, List<DownloadedDependency> dependencies) {
         var classpath = dependencies.stream().map(e -> e.downloadPath().toString()).collect(Collectors.joining(":")) + ":" + targetDirectory.toString();
         var filesToCompile = new LinkedList<CompilationUnit>();
 
@@ -85,13 +86,19 @@ public final class IncrementalCompiler {
         }
 
         if (filesToCompile.isEmpty()) {
-            return;
+            return null;
         }
 
         var output = targetDirectory.toString();
 
         var cmd = new LinkedList<>(List.of(
                 toolchain.javac().toString(),
+                "-source",
+                artifactDocument.artifact().platform().version(),
+                "-target",
+                artifactDocument.artifact().platform().version(),
+                "-release",
+                artifactDocument.artifact().platform().version(),
                 "-cp",
                 classpath,
                 "-d",
@@ -100,7 +107,7 @@ public final class IncrementalCompiler {
         cmd.addAll(filesToCompile.stream().map(e -> e.javaClass.toString()).toList());
 
         try {
-            Runtime.getRuntime().exec(cmd.toArray(String[]::new));
+            return Runtime.getRuntime().exec(cmd.toArray(String[]::new));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

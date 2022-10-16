@@ -1,19 +1,13 @@
 package cat.pottery.ui.parser;
 
-import cat.pottery.ui.artifact.ArtifactDocument;
-import cat.pottery.ui.artifact.Artifact;
-import cat.pottery.ui.artifact.Dependency;
-import cat.pottery.ui.artifact.Platform;
+import cat.pottery.ui.artifact.*;
 import cat.pottery.ui.parser.result.ArtifactFileParserResult;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class YamlArtifactFileParser implements ArtifactFileParser {
     private final Yaml yaml;
@@ -46,6 +40,9 @@ public class YamlArtifactFileParser implements ArtifactFileParser {
         var platformVersion = platform.get("version");
         var platformProduces = platform.get("produces");
 
+        var manifest = (HashMap<String, String>) artifact.getOrDefault("manifest", new HashMap<>());
+        var mainClass = manifest.getOrDefault("main-class", "").toString();
+
         var dependencies = (List<Map<String, String>>) artifact.getOrDefault("dependencies", Collections.emptyList());
         var parsedDependencies = new ArrayList<Dependency>(dependencies.size());
 
@@ -69,7 +66,8 @@ public class YamlArtifactFileParser implements ArtifactFileParser {
                                 artifactId,
                                 version,
                                 new Platform(platformVersion, platformProduces),
-                                parsedDependencies
+                                parsedDependencies,
+                                new Manifest(mainClass)
                         )
                 ),
                 Collections.emptyList()

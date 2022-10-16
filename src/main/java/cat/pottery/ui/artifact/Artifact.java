@@ -10,6 +10,7 @@ public record Artifact(
         String id,
         String version,
         Platform platform,
-        List<Dependency> dependencies
+        List<Dependency> dependencies,
+        Manifest manifest
 ) {
 }

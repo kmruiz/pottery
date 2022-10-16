@@ -1,5 +1,6 @@
 parameters:
   junit.version: "5.9.1"
+  snakeyaml.version: "1.33"
 
 artifact:
   group:    "cat.pottery"
@@ -10,8 +11,11 @@ artifact:
     version: "18"
     produces: "fatjar"
 
+  manifest:
+    main-class: "cat.pottery.ui.cli.Bootstrap"
+
   dependencies:
-    - production: "org.yaml:snakeyaml:1.33"
+    - production: "org.yaml:snakeyaml:${snakeyaml.version}"
     - test: "org.junit.jupiter:junit-jupiter-api:${junit.version}"
   
     

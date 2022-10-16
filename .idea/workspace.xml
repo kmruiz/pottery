@@ -4,20 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Yeah parameters on deps">
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/compiler/IncrementalCompiler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/ArtifactOutput.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/Bootstrap.java" afterDir="false" />
+    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Now can generate fatJar without optimization">
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/Manifest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyResolver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DownloadManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DownloadManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/ArtifactDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/ArtifactDocument.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/Dependency.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/Dependency.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pottery.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pottery.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/compiler/IncrementalCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/compiler/IncrementalCompiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/Artifact.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/Artifact.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/Bootstrap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/YamlArtifactFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/YamlArtifactFileParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/result/ArtifactFileParserResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/result/ArtifactFileParserResult.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +92,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1665864897567</updated>
-      <workItem from="1665864898702" duration="14155000" />
+      <workItem from="1665864898702" duration="15518000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -113,7 +108,21 @@
       <option name="project" value="LOCAL" />
       <updated>1665877074683</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Now can generate fatJar without optimization">
+      <created>1665881558031</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1665881558031</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Now can generate fatJar without optimization">
+      <created>1665881568386</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1665881568386</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,9 +142,19 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Parse simple yaml" />
     <MESSAGE value="Yeah parameters on deps" />
-    <option name="LAST_COMMIT_MESSAGE" value="Yeah parameters on deps" />
+    <MESSAGE value="Now can generate fatJar without optimization" />
+    <option name="LAST_COMMIT_MESSAGE" value="Now can generate fatJar without optimization" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java</url>
+          <line>92</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="node.getNodeName()" language="JAVA" />
