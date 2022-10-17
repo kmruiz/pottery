@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="now supports generating native images">
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/container/ContainerArtifactOutput.java" afterDir="false" />
+    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Support for building containers">
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/library/LibraryArtifactOutput.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/CliCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/CommandResolver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/PackageCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/WatchCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pottery.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pottery.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/nativeImage/NativeImageArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/nativeImage/NativeImageArtifactOutput.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/Bootstrap.java" afterDir="false" />
     </list>
@@ -41,19 +45,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="cat.pottery.engine.dependencies" />
@@ -68,6 +72,7 @@
       </envs>
       <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
       <module name="pottery" />
+      <option name="PROGRAM_PARAMETERS" value="watch" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="cat.pottery.ui.cli.*" />
@@ -92,7 +97,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1665864897567</updated>
-      <workItem from="1665864898702" duration="18769000" />
+      <workItem from="1665864898702" duration="19086000" />
+      <workItem from="1665935477929" duration="1765000" />
+      <workItem from="1666027219173" duration="272000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -136,7 +143,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665884991353</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Support for building containers">
+      <created>1665886219846</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1665886219846</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -159,14 +173,7 @@
     <MESSAGE value="Now can generate fatJar without optimization" />
     <MESSAGE value="Some optimizations" />
     <MESSAGE value="now supports generating native images" />
-    <option name="LAST_COMMIT_MESSAGE" value="now supports generating native images" />
-  </component>
-  <component name="XDebuggerManager">
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="node.getNodeName()" language="JAVA" />
-        <watch expression="attrs.lastModifiedTime()" language="JAVA" />
-      </configuration>
-    </watches-manager>
+    <MESSAGE value="Support for building containers" />
+    <option name="LAST_COMMIT_MESSAGE" value="Support for building containers" />
   </component>
 </project>

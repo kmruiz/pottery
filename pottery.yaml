@@ -9,7 +9,7 @@ artifact:
 
   platform:
     version: "17"
-    produces: "container"
+    produces: "library"
 
   manifest:
     main-class: "cat.pottery.ui.cli.Bootstrap"

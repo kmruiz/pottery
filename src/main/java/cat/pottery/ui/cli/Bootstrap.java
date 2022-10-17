@@ -7,8 +7,12 @@ import cat.pottery.engine.dependencies.maven.MavenDependency;
 import cat.pottery.engine.output.ArtifactOutput;
 import cat.pottery.engine.output.container.ContainerArtifactOutput;
 import cat.pottery.engine.output.fatJar.FatJarArtifactOutput;
+import cat.pottery.engine.output.library.LibraryArtifactOutput;
 import cat.pottery.engine.output.nativeImage.NativeImageArtifactOutput;
 import cat.pottery.engine.toolchain.Toolchain;
+import cat.pottery.ui.cli.command.CliCommand;
+import cat.pottery.ui.cli.command.CommandResolver;
+import cat.pottery.ui.cli.command.WatchCommand;
 import cat.pottery.ui.parser.YamlArtifactFileParser;
 import cat.pottery.ui.parser.result.ArtifactFileParserResult;
 
@@ -19,33 +23,13 @@ import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public final class Bootstrap {
-    public static void main(String[] args) throws InterruptedException, IOException {
-        var queue = new ArrayBlockingQueue<MavenDependency>(128);
-        var manager = new DownloadManager(queue, new HashMap<>(), 4);
-
-        var dependencyResolver = new DependencyResolver(manager, queue, 4);
-        var artifactDoc = (ArtifactFileParserResult.Success) new YamlArtifactFileParser().parse(Path.of("pottery.yaml"));
-
-        var deps = dependencyResolver.downloadDependenciesOfArtifact(artifactDoc.document());
-        var compiler = new IncrementalCompiler(Toolchain.systemDefault());
-        var process = compiler.compileTree(artifactDoc.document(), Path.of("src", "main", "java").toAbsolutePath(), Path.of("target", "classes").toAbsolutePath(), deps);
-
-        if (process != null) {
-            process.waitFor();
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            return;
         }
 
-        ArtifactOutput artifactOutput = switch (artifactDoc.document().artifact().platform().produces().toLowerCase()) {
-            case "fatjar" -> new FatJarArtifactOutput(Toolchain.systemDefault());
-            case "native" -> new NativeImageArtifactOutput(Toolchain.systemDefault(), new FatJarArtifactOutput(Toolchain.systemDefault()));
-            case "container" -> new ContainerArtifactOutput(Toolchain.systemDefault(), new FatJarArtifactOutput(Toolchain.systemDefault()));
-            default -> throw new Error();
-        };
+        CliCommand cmd = new CommandResolver().byName(args[0]);
+        cmd.execute(args);
 
-        artifactOutput.generateArtifact(
-                artifactDoc.document(),
-                Path.of("target", "classes"),
-                deps,
-                Path.of("target")
-        );
     }
 }

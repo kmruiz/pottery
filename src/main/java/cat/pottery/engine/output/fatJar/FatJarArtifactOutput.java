@@ -96,7 +96,7 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
                         Built-By: %s
                         Build-Jdk: %s
                         Class-Path: %s
-                        Main-Class: %s
+                        Main-Class: %s 
                         """.formatted(
                         toolchain.potteryVersion(),
                         toolchain.currentUser(),
