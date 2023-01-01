@@ -3,6 +3,8 @@ package cat.pottery.engine.output.fatJar;
 import cat.pottery.engine.dependencies.maven.DownloadedDependency;
 import cat.pottery.engine.output.ArtifactOutput;
 import cat.pottery.engine.toolchain.Toolchain;
+import cat.pottery.telemetry.Log;
+import cat.pottery.telemetry.Timing;
 import cat.pottery.ui.artifact.ArtifactDocument;
 
 import java.io.*;
@@ -20,6 +22,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public final class FatJarArtifactOutput implements ArtifactOutput {
+    private static final String TIMING_ID = "generate-output";
     private final Toolchain toolchain;
 
     public FatJarArtifactOutput(Toolchain toolchain) {
@@ -28,6 +31,7 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
 
     @Override
     public void generateArtifact(ArtifactDocument artifactDocument, Path compilerOutput, List<DownloadedDependency> classPath, Path outputPath) {
+        Timing.getInstance().start(TIMING_ID);
         var outputFile = outputPath.resolve(artifactDocument.artifact().id() + "-" + artifactDocument.artifact().version() + "-fat.jar-tmp");
         var outputFileFinal = outputPath.resolve(artifactDocument.artifact().id() + "-" + artifactDocument.artifact().version() + "-fat.jar");
         ZipOutputStream zos = null;
@@ -116,6 +120,9 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
                 out.closeEntry();
                 out.close();
                 Files.move(outputFile, outputFileFinal);
+                Timing.getInstance().end(TIMING_ID);
+                var duration = Timing.getInstance().durationOf(TIMING_ID);
+                Log.getInstance().info("Built fatJar %s in %dms.", outputFileFinal.toString(), duration.toMillis());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

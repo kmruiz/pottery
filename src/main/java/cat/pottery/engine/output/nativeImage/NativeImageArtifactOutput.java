@@ -4,6 +4,8 @@ import cat.pottery.engine.dependencies.maven.DownloadedDependency;
 import cat.pottery.engine.output.ArtifactOutput;
 import cat.pottery.engine.output.fatJar.FatJarArtifactOutput;
 import cat.pottery.engine.toolchain.Toolchain;
+import cat.pottery.telemetry.Log;
+import cat.pottery.telemetry.Timing;
 import cat.pottery.ui.artifact.ArtifactDocument;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class NativeImageArtifactOutput implements ArtifactOutput {
+    private static final String TIMING_ID = "generate-output-native-image";
     private final Toolchain toolchain;
     private final FatJarArtifactOutput fatJarOutput;
 
@@ -22,7 +25,10 @@ public class NativeImageArtifactOutput implements ArtifactOutput {
 
     @Override
     public void generateArtifact(ArtifactDocument artifactDocument, Path compilerOutput, List<DownloadedDependency> classPath, Path outputPath) {
+        Log.getInstance().info("Generating required fatJar for native image.");
         fatJarOutput.generateArtifact(artifactDocument, compilerOutput, classPath, outputPath);
+
+        Timing.getInstance().start(TIMING_ID);
         Path fatJarPath = outputPath.resolve(artifactDocument.artifact().id() + "-" + artifactDocument.artifact().version() + "-fat.jar");
         Path outputImage = outputPath.resolve(artifactDocument.artifact().id() + "-" + artifactDocument.artifact().version());
 
@@ -40,9 +46,14 @@ public class NativeImageArtifactOutput implements ArtifactOutput {
             var process = Runtime.getRuntime().exec(cmd.toArray(String[]::new));
             process.waitFor();
 
-            System.out.println(new String(process.getInputStream().readAllBytes()));
-            System.err.println(new String(process.getErrorStream().readAllBytes()));
+            Timing.getInstance().end(TIMING_ID);
+            var duration = Timing.getInstance().durationOf(TIMING_ID);
+
+//            System.out.println(new String(process.getInputStream().readAllBytes()));
+//            System.err.println(new String(process.getErrorStream().readAllBytes()));
+            Log.getInstance().info("Built GraalVM native image %s in %dms.", outputImage.toString(), duration.toMillis());
         } catch (Exception e) {
+            Log.getInstance().fatal("Error generating native image.", e);
             throw new RuntimeException(e);
         }
     }

@@ -2,6 +2,8 @@ package cat.pottery.engine.output.library;
 
 import cat.pottery.engine.dependencies.maven.DownloadedDependency;
 import cat.pottery.engine.output.ArtifactOutput;
+import cat.pottery.telemetry.Log;
+import cat.pottery.telemetry.Timing;
 import cat.pottery.ui.artifact.ArtifactDocument;
 
 import java.io.FileInputStream;
@@ -17,8 +19,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class LibraryArtifactOutput implements ArtifactOutput {
+    private static final String TIMING_ID = "generate-output";
     @Override
     public void generateArtifact(ArtifactDocument artifactDocument, Path compilerOutput, List<DownloadedDependency> classPath, Path outputPath) {
+        Timing.getInstance().start(TIMING_ID);
         var outputFile = outputPath.resolve(artifactDocument.artifact().id() + "-" + artifactDocument.artifact().version() + ".jar-tmp");
         var outputFileFinal = outputPath.resolve(artifactDocument.artifact().id() + "-" + artifactDocument.artifact().version() + ".jar");
 
@@ -51,6 +55,9 @@ public class LibraryArtifactOutput implements ArtifactOutput {
 
             out.close();
             Files.move(outputFile, outputFileFinal);
+            Timing.getInstance().end(TIMING_ID);
+            var duration = Timing.getInstance().durationOf(TIMING_ID);
+            Log.getInstance().info("Built library jar %s in %dms.", outputFileFinal.toString(), duration.toMillis());
         } catch (Throwable ex) {
             throw new RuntimeException(ex);
         }

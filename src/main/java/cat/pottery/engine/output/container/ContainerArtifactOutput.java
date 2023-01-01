@@ -4,6 +4,8 @@ import cat.pottery.engine.dependencies.maven.DownloadedDependency;
 import cat.pottery.engine.output.ArtifactOutput;
 import cat.pottery.engine.output.fatJar.FatJarArtifactOutput;
 import cat.pottery.engine.toolchain.Toolchain;
+import cat.pottery.telemetry.Log;
+import cat.pottery.telemetry.Timing;
 import cat.pottery.ui.artifact.ArtifactDocument;
 
 import java.nio.file.Files;
@@ -13,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ContainerArtifactOutput implements ArtifactOutput {
+    private static final String TIMING_ID = "generate-output";
     private final Toolchain toolchain;
     private final FatJarArtifactOutput fatJarOutput;
 
@@ -43,21 +46,23 @@ public class ContainerArtifactOutput implements ArtifactOutput {
         try {
             Files.writeString(outputContainerfile, declaration);
 
+            String containerName = "%s/%s:%s".formatted(artifactDocument.artifact().group(), artifactDocument.artifact().id(), artifactDocument.artifact().version());
             var cmd = new LinkedList<>(List.of(
                     toolchain.containerBuilder().toString(),
                     "build",
                     "-f",
                     outputContainerfile.toString(),
                     "-t",
-                    "%s/%s:%s".formatted(artifactDocument.artifact().group(), artifactDocument.artifact().id(), artifactDocument.artifact().version()),
+                    containerName,
                     "."
             ));
 
+            Timing.getInstance().start(TIMING_ID);
             var process = Runtime.getRuntime().exec(cmd.toArray(String[]::new));
             process.waitFor();
-
-            System.out.println(new String(process.getInputStream().readAllBytes()));
-            System.err.println(new String(process.getErrorStream().readAllBytes()));
+            Timing.getInstance().end(TIMING_ID);
+            var duration = Timing.getInstance().durationOf(TIMING_ID);
+            Log.getInstance().info("Built docker container %s in %dms.", containerName, duration.toMillis());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

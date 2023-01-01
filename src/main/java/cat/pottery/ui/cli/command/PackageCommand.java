@@ -11,6 +11,8 @@ import cat.pottery.engine.output.fatJar.FatJarArtifactOutput;
 import cat.pottery.engine.output.library.LibraryArtifactOutput;
 import cat.pottery.engine.output.nativeImage.NativeImageArtifactOutput;
 import cat.pottery.engine.toolchain.Toolchain;
+import cat.pottery.telemetry.Log;
+import cat.pottery.telemetry.Timing;
 import cat.pottery.ui.parser.YamlArtifactFileParser;
 import cat.pottery.ui.parser.result.ArtifactFileParserResult;
 import picocli.CommandLine;
@@ -20,8 +22,13 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class PackageCommand implements CliCommand {
+
+    private static final String TIMING_ID = "package-command";
+
     @Override
     public void execute(CommandLine.ParseResult parseResult) {
+        Timing.getInstance().start(TIMING_ID);
+
         var queue = new ArrayBlockingQueue<MavenDependency>(128);
         var manager = new DownloadManager(queue, new ConcurrentHashMap<>(32, 1.2f, 4), 4);
         var pomContextRegistry = new PomContextRegistry(new ConcurrentHashMap<>(32, 1.2f, 4));
@@ -55,5 +62,9 @@ public final class PackageCommand implements CliCommand {
                 deps,
                 Path.of("target")
         );
+
+        Timing.getInstance().end(TIMING_ID);
+        var duration = Timing.getInstance().durationOf(TIMING_ID);
+        Log.getInstance().info("Package done in %dms", duration.toMillis());
     }
 }

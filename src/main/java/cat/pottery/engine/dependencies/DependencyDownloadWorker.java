@@ -154,8 +154,7 @@ public final class DependencyDownloadWorker implements Runnable {
         } catch (FileNotFoundException e) {
             return Collections.emptyList();
         } catch (Throwable e) {
-            System.err.println("For " + mavenDependency + ": " + pomDownloadUrl(mavenDependency));
-            e.printStackTrace(System.err);
+            Log.getInstance().error("Could not download dependency %s:%s:%s POM file from %s.", e, mavenDependency.groupId(), mavenDependency.artifactId(), mavenDependency.version(), pomDownloadUrl(mavenDependency));
             return Collections.emptyList();
         }
     }
