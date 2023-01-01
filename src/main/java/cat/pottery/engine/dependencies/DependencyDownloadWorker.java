@@ -43,13 +43,13 @@ public final class DependencyDownloadWorker implements Runnable {
         MavenDependency toDownload = null;
         do {
             toDownload = dependenciesToDownload.poll();
-            if (toDownload == null) {
+            if (toDownload == null || toDownload.version() == null) {
                 break;
             }
 
             // first find transitive dependencies and offer them to download
             var transitiveDependencies = findTransitiveDependencies(toDownload);
-            transitiveDependencies.forEach(downloadManager::trackDependency);
+            transitiveDependencies.forEach(downloadManager::trackTransitiveDependency);
 
             // now download the jar
             if (shouldDownload(toDownload)) {

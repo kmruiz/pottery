@@ -15,19 +15,33 @@ public final class DownloadManager {
     private final Map<String, Set<MavenDependency>> foundVersionsPerArtifact;
     private final int expectFinishingCount;
     private final AtomicInteger finishCount;
+    private final boolean downloadTestDependencies;
 
-    public DownloadManager(Queue<MavenDependency> dependenciesToDownload, Map<String, Set<MavenDependency>> foundVersionsPerArtifact, int expectFinishingCount) {
+    public DownloadManager(Queue<MavenDependency> dependenciesToDownload, Map<String, Set<MavenDependency>> foundVersionsPerArtifact, int expectFinishingCount, boolean downloadTestDependencies) {
         this.dependenciesToDownload = dependenciesToDownload;
         this.foundVersionsPerArtifact = foundVersionsPerArtifact;
         this.expectFinishingCount = expectFinishingCount;
         this.finishCount = new AtomicInteger(0);
+        this.downloadTestDependencies = downloadTestDependencies;
     }
 
     public void trackDependency(MavenDependency dependency) {
+        if (dependency.scope() == MavenDependency.Scope.TEST && !downloadTestDependencies) {
+            return;
+        }
+
+        markDependencyToDownload(dependency);
+    }
+
+    public void trackTransitiveDependency(MavenDependency dependency) {
         if (dependency.scope() == MavenDependency.Scope.TEST) {
             return;
         }
 
+        markDependencyToDownload(dependency);
+    }
+
+    private void markDependencyToDownload(MavenDependency dependency) {
         var qname = "%s:%s".formatted(dependency.groupId(), dependency.artifactId());
         var versionsOfDep = foundVersionsPerArtifact.getOrDefault(qname, new HashSet<>());
 
@@ -40,7 +54,6 @@ public final class DownloadManager {
             dependenciesToDownload.offer(dependency);
             versionsOfDep.add(dependency);
             foundVersionsPerArtifact.put(qname, versionsOfDep);
-        } else {
         }
     }
 

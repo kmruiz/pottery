@@ -1,5 +1,6 @@
 package cat.pottery.ui.cli.command;
 
+import cat.pottery.engine.toolchain.Toolchain;
 import picocli.CommandLine;
 
 public final class CommandResolver {
@@ -20,7 +21,7 @@ public final class CommandResolver {
 
     public static CommandLine.Model.CommandSpec CMD_SPEC = CommandLine.Model.CommandSpec.create()
             .helpCommand(true)
-            .version("0.0.1")
+            .version(Toolchain.systemDefault().potteryVersion())
             .addSubcommand("watch", CommandLine.Model.CommandSpec.create()
                     .helpCommand(true)
                     .add(CommandLine.Model.OptionSpec.builder("-i", "--polling-interval")

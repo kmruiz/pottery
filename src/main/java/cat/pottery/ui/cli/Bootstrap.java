@@ -1,5 +1,7 @@
 package cat.pottery.ui.cli;
 
+import cat.pottery.engine.toolchain.Toolchain;
+import cat.pottery.telemetry.Log;
 import cat.pottery.ui.cli.command.CommandResolver;
 import picocli.CommandLine;
 
@@ -26,6 +28,7 @@ public final class Bootstrap {
             System.exit(cmdLine.getCommandSpec().exitCodeOnUsageHelp());
         }
 
+        Log.getInstance().info("Running pottery version %s", Toolchain.systemDefault().potteryVersion());
         var clicmd = new CommandResolver().byName(parseResult.subcommand().commandSpec().name());
         clicmd.execute(parseResult.subcommand());
     }

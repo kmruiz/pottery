@@ -21,8 +21,10 @@ public final class PomContextRegistry {
             contextMap.put(parentContextId, new Context(parentGroup, parentId, parentVersion, new ConcurrentHashMap<>()));
         }
 
+        var parameters = new ConcurrentHashMap<>(contextMap.get(ID_FORMAT.formatted(parentGroup, parentId, parentVersion)).parameters());
+        parameters.put("project.version", version);
         var ctx = new Context(parentGroup, parentId, parentVersion,
-                new ConcurrentHashMap<>(contextMap.get(ID_FORMAT.formatted(parentGroup, parentId, parentVersion)).parameters())
+                parameters
         );
 
         String newId = ID_FORMAT.formatted(group, id, version);
@@ -32,8 +34,11 @@ public final class PomContextRegistry {
     }
 
     public String register(String group, String id, String version) {
+        var parameters = new ConcurrentHashMap<String, String>();
+        parameters.put("project.version", version);
+
         var ctx = new Context(group, id, version,
-                new ConcurrentHashMap<>()
+                parameters
         );
 
         String newId = ID_FORMAT.formatted(group, id, version);
@@ -49,9 +54,12 @@ public final class PomContextRegistry {
     public String resolveExpression(String id, String expression) {
         var ref = new AtomicReference<>(expression);
 
-        contextMap.get(id).parameters().forEach((key, value) ->
-                ref.set(ref.get().replace("${" + key + "}", value))
-        );
+        contextMap.get(id).parameters().forEach((key, value) -> {
+            var toReplace = "${" + key + "}";
+            if (ref.get().contains(toReplace)) {
+                ref.set(ref.get().replace(toReplace, value));
+            }
+        });
 
         return ref.get();
     }
