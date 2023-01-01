@@ -72,6 +72,16 @@ public record MavenDependency(
         return dependency;
     }
     public enum Scope {
-        COMPILE, RUNTIME, TEST
+        COMPILE("packaging"), RUNTIME("packaging"), TEST("tesing");
+
+        private final String reason;
+
+        Scope(String reason) {
+            this.reason = reason;
+        }
+
+        public String reason() {
+            return reason;
+        }
     }
 }

@@ -1,6 +1,8 @@
 package cat.pottery.engine.dependencies;
 
 import cat.pottery.engine.dependencies.maven.MavenDependency;
+import cat.pottery.telemetry.Log;
+import cat.pottery.telemetry.Timing;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -160,10 +162,12 @@ public final class DependencyDownloadWorker implements Runnable {
 
     private void downloadJar(MavenDependency dependency) {
         try {
+
             var whereToDownload = downloadManager.downloadPathOfDependency(dependency);
             var folder = whereToDownload.getParent();
             Files.createDirectories(folder);
 
+            Timing.getInstance().start(dependency.toString());
             httpClient.send(
                     HttpRequest.newBuilder()
                             .GET()
@@ -172,6 +176,12 @@ public final class DependencyDownloadWorker implements Runnable {
                             ).build(),
                     HttpResponse.BodyHandlers.ofFile(whereToDownload)
             );
+            Timing.getInstance().end(dependency.toString());
+
+            var downloadDuration = Timing.getInstance().durationOf(dependency.toString());
+
+            Log.getInstance().info("Downloading %s:%s:%s:%s for %s in %dms.", dependency.groupId(), dependency.artifactId(), dependency.version(), dependency.qualifier(), dependency.scope().reason(), downloadDuration.toMillis());
+
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

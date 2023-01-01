@@ -1,19 +1,32 @@
 package cat.pottery.ui.cli;
 
-import cat.pottery.ui.cli.command.CliCommand;
 import cat.pottery.ui.cli.command.CommandResolver;
-import com.github.tomaslanger.chalk.Chalk;
+import picocli.CommandLine;
+
+import static cat.pottery.ui.cli.command.CommandResolver.CMD_SPEC;
 
 public final class Bootstrap {
     public static void main(String[] args) {
-        System.out.println(Chalk.on("COLORED").bgBlack().yellow().underline());
         if (args.length < 1) {
             return;
         }
 
+        var cmdLine = new CommandLine(CMD_SPEC);
+        var parseResult = cmdLine.parseArgs(args);
+        if (parseResult.isUsageHelpRequested()) {
+            cmdLine.usage(cmdLine.getOut());
+            System.exit(cmdLine.getCommandSpec().exitCodeOnUsageHelp());
+        } else if (parseResult.isVersionHelpRequested()) {
+            cmdLine.printVersionHelp(cmdLine.getOut());
+            System.exit(cmdLine.getCommandSpec().exitCodeOnVersionHelp());
+        }
 
-        CliCommand cmd = new CommandResolver().byName(args[0]);
-        cmd.execute(args);
+        if (!parseResult.hasSubcommand()) {
+            cmdLine.usage(cmdLine.getOut());
+            System.exit(cmdLine.getCommandSpec().exitCodeOnUsageHelp());
+        }
 
+        var clicmd = new CommandResolver().byName(parseResult.subcommand().commandSpec().name());
+        clicmd.execute(parseResult.subcommand());
     }
 }

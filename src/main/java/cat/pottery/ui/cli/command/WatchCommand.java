@@ -1,6 +1,7 @@
 package cat.pottery.ui.cli.command;
 
-import cat.pottery.ui.artifact.ArtifactDocument;
+import cat.pottery.telemetry.Log;
+import picocli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -11,18 +12,23 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public final class WatchCommand implements CliCommand {
 
-    @Override
-    public void execute(String[] args) {
+    public void execute(CommandLine.ParseResult parseResult) {
         CliCommand target = new PackageCommand();
-        if (args.length == 3) {
-            target = new CommandResolver().byName(args[2]);
+        CommandLine.ParseResult innerParseResult = parseResult;
+        var cmdName = "package";
+
+        if (parseResult.hasSubcommand()) {
+            var watchSubcmd = parseResult.subcommand();
+            cmdName = watchSubcmd.commandSpec().name();
+            target = new CommandResolver().byName(cmdName);
+            innerParseResult = watchSubcmd;
         }
 
-        Path dir = Path.of(".").toAbsolutePath();
-        System.out.println("watching " + dir);
+        long pollingTime = parseResult.matchedOptionValue('i', 250);
+        Path dir = Path.of(parseResult.matchedPositionalValue(0, ".")).toAbsolutePath();
+        Log.getInstance().info("Watching directory %s every %d ms.", dir.toString(), pollingTime);
 
         try (var watcher = FileSystems.getDefault().newWatchService()) {
-
             Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
@@ -37,7 +43,7 @@ public final class WatchCommand implements CliCommand {
             for (;;) {
                 WatchKey key;
                 try {
-                    key = watcher.poll(250, TimeUnit.MILLISECONDS);
+                    key = watcher.poll(pollingTime, TimeUnit.MILLISECONDS);
                 } catch (InterruptedException x) {
                     return; //
                 }
@@ -55,9 +61,11 @@ public final class WatchCommand implements CliCommand {
 
                     WatchEvent<Path> ev = (WatchEvent<Path>)event;
                     Path filename = ev.context();
+                    Log.getInstance().info("Detected change on %s", filename.toString());
                 }
 
-                target.execute(args);
+                Log.getInstance().info("Running subcommand %s", cmdName);
+                target.execute(innerParseResult);
 
                 boolean valid = key.reset();
                 if (!valid) {
@@ -65,6 +73,7 @@ public final class WatchCommand implements CliCommand {
                 }
             }
         } catch (IOException e) {
+            Log.getInstance().fatal("Exception watching directory: %s", e, e.getMessage());
             throw new RuntimeException(e);
         }
 

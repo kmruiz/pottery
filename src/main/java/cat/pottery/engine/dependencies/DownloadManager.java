@@ -2,6 +2,7 @@ package cat.pottery.engine.dependencies;
 
 import cat.pottery.engine.dependencies.maven.DownloadedDependency;
 import cat.pottery.engine.dependencies.maven.MavenDependency;
+import cat.pottery.telemetry.Log;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -33,14 +34,13 @@ public final class DownloadManager {
         if (versionsOfDep.stream().noneMatch(e -> e.version().equals(dependency.version()))) {
             if (!versionsOfDep.isEmpty()) {
                 // warning!
-                System.out.println("Downloading other version of " + dependency);
+                Log.getInstance().warn("Using multiple versions of %s:%s", dependency.groupId(), dependency.artifactId());
             }
 
             dependenciesToDownload.offer(dependency);
             versionsOfDep.add(dependency);
             foundVersionsPerArtifact.put(qname, versionsOfDep);
         } else {
-            // System.out.println("Already downloaded " + dependency);
         }
     }
 

@@ -13,15 +13,15 @@ import cat.pottery.engine.output.nativeImage.NativeImageArtifactOutput;
 import cat.pottery.engine.toolchain.Toolchain;
 import cat.pottery.ui.parser.YamlArtifactFileParser;
 import cat.pottery.ui.parser.result.ArtifactFileParserResult;
+import picocli.CommandLine;
 
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class PackageCommand implements CliCommand {
     @Override
-    public void execute(String[] args) {
+    public void execute(CommandLine.ParseResult parseResult) {
         var queue = new ArrayBlockingQueue<MavenDependency>(128);
         var manager = new DownloadManager(queue, new ConcurrentHashMap<>(32, 1.2f, 4), 4);
         var pomContextRegistry = new PomContextRegistry(new ConcurrentHashMap<>(32, 1.2f, 4));

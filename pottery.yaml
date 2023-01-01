@@ -2,6 +2,7 @@ parameters:
   junit.version: "5.9.1"
   snakeyaml.version: "1.33"
   chalk.version: "1.0.2"
+  picocli.version: "4.7.0"
 
 artifact:
   group:    "cat.pottery"
@@ -10,7 +11,7 @@ artifact:
 
   platform:
     version: "17"
-    produces: "native"
+    produces: "fatjar"
 
   manifest:
     main-class: "cat.pottery.ui.cli.Bootstrap"
@@ -18,6 +19,7 @@ artifact:
   dependencies:
     - production: "org.yaml:snakeyaml:${snakeyaml.version}"
     - production: "com.github.tomas-langer:chalk:${chalk.version}"
+    - production: "info.picocli:picocli:${picocli.version}"
     - test: "org.junit.jupiter:junit-jupiter-api:${junit.version}"
   
     
