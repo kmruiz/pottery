@@ -63,8 +63,7 @@ public final class PackageCommand implements CliCommand {
                 Path.of("target")
         );
 
-        Timing.getInstance().end(TIMING_ID);
-        var duration = Timing.getInstance().durationOf(TIMING_ID);
-        Log.getInstance().info("Package done in %dms", duration.toMillis());
+        var duration = Timing.getInstance().end(TIMING_ID);
+        Log.getInstance().info("Package done in %s.", duration);
     }
 }

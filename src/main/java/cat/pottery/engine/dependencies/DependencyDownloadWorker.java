@@ -175,11 +175,9 @@ public final class DependencyDownloadWorker implements Runnable {
                             ).build(),
                     HttpResponse.BodyHandlers.ofFile(whereToDownload)
             );
-            Timing.getInstance().end(dependency.toString());
+            var downloadDuration = Timing.getInstance().end(dependency.toString());
 
-            var downloadDuration = Timing.getInstance().durationOf(dependency.toString());
-
-            Log.getInstance().info("Downloading %s:%s:%s:%s for %s in %dms.", dependency.groupId(), dependency.artifactId(), dependency.version(), dependency.qualifier(), dependency.scope().reason(), downloadDuration.toMillis());
+            Log.getInstance().info("Downloading %s:%s:%s:%s for %s in %s.", dependency.groupId(), dependency.artifactId(), dependency.version(), dependency.qualifier(), dependency.scope().reason(), downloadDuration);
 
         } catch (Throwable e) {
             throw new RuntimeException(e);

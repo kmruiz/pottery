@@ -11,11 +11,14 @@ import java.util.concurrent.TimeUnit;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public final class WatchCommand implements CliCommand {
+    public static boolean IS_WATCHING = false;
+
 
     public void execute(CommandLine.ParseResult parseResult) {
         CliCommand target = new PackageCommand();
         CommandLine.ParseResult innerParseResult = parseResult;
         var cmdName = "package";
+        IS_WATCHING = true;
 
         if (parseResult.hasSubcommand()) {
             var watchSubcmd = parseResult.subcommand();

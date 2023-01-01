@@ -60,9 +60,8 @@ public class ContainerArtifactOutput implements ArtifactOutput {
             Timing.getInstance().start(TIMING_ID);
             var process = Runtime.getRuntime().exec(cmd.toArray(String[]::new));
             process.waitFor();
-            Timing.getInstance().end(TIMING_ID);
-            var duration = Timing.getInstance().durationOf(TIMING_ID);
-            Log.getInstance().info("Built docker container %s in %dms.", containerName, duration.toMillis());
+            var duration = Timing.getInstance().end(TIMING_ID);
+            Log.getInstance().info("Built docker container %s in %s.", containerName, duration);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

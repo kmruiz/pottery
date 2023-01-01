@@ -55,9 +55,8 @@ public class LibraryArtifactOutput implements ArtifactOutput {
 
             out.close();
             Files.move(outputFile, outputFileFinal);
-            Timing.getInstance().end(TIMING_ID);
-            var duration = Timing.getInstance().durationOf(TIMING_ID);
-            Log.getInstance().info("Built library jar %s in %dms.", outputFileFinal.toString(), duration.toMillis());
+            var duration = Timing.getInstance().end(TIMING_ID);
+            Log.getInstance().info("Built library jar %s in %s.", outputFileFinal.toString(), duration);
         } catch (Throwable ex) {
             throw new RuntimeException(ex);
         }

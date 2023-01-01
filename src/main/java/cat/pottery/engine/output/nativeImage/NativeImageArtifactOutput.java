@@ -46,12 +46,11 @@ public class NativeImageArtifactOutput implements ArtifactOutput {
             var process = Runtime.getRuntime().exec(cmd.toArray(String[]::new));
             process.waitFor();
 
-            Timing.getInstance().end(TIMING_ID);
-            var duration = Timing.getInstance().durationOf(TIMING_ID);
+            var duration = Timing.getInstance().end(TIMING_ID);
 
 //            System.out.println(new String(process.getInputStream().readAllBytes()));
 //            System.err.println(new String(process.getErrorStream().readAllBytes()));
-            Log.getInstance().info("Built GraalVM native image %s in %dms.", outputImage.toString(), duration.toMillis());
+            Log.getInstance().info("Built GraalVM native image %s in %s.", outputImage.toString(), duration);
         } catch (Exception e) {
             Log.getInstance().fatal("Error generating native image.", e);
             throw new RuntimeException(e);

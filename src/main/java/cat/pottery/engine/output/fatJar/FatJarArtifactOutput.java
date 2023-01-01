@@ -120,9 +120,8 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
                 out.closeEntry();
                 out.close();
                 Files.move(outputFile, outputFileFinal);
-                Timing.getInstance().end(TIMING_ID);
-                var duration = Timing.getInstance().durationOf(TIMING_ID);
-                Log.getInstance().info("Built fatJar %s in %dms.", outputFileFinal.toString(), duration.toMillis());
+                var duration = Timing.getInstance().end(TIMING_ID);
+                Log.getInstance().info("Built fatJar %s in %s.", outputFileFinal.toString(), duration);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

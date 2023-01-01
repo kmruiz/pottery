@@ -13,19 +13,20 @@ public final class CommandResolver {
         };
     }
 
-    private static CommandLine.Model.CommandSpec PACKAGE_SPEC = CommandLine.Model.CommandSpec.create()
-            .helpCommand(true);
+    private static CommandLine.Model.CommandSpec PACKAGE_SPEC = CommandLine.Model.CommandSpec.create();
 
     private static CommandLine.Model.CommandSpec TEST_SPEC = CommandLine.Model.CommandSpec.create()
-            .helpCommand(true);
+            .addOption(CommandLine.Model.OptionSpec.builder("-v", "--verbose")
+                    .description("Show stack traces for failed tests.")
+                    .build())
+            .addOption(CommandLine.Model.OptionSpec.builder("-x", "--strict")
+                    .description("Strict mode. Forces failure when there are skipped tests.")
+                    .build());
 
     public static CommandLine.Model.CommandSpec CMD_SPEC = CommandLine.Model.CommandSpec.create()
-            .helpCommand(true)
             .version(Toolchain.systemDefault().potteryVersion())
             .addSubcommand("watch", CommandLine.Model.CommandSpec.create()
-                    .helpCommand(true)
                     .add(CommandLine.Model.OptionSpec.builder("-i", "--polling-interval")
-                            .help(true)
                             .description("Polling interval of the project folder, in milliseconds. Defaults to 250")
                             .paramLabel("POLLING_INTERVAL")
                             .defaultValue("250")
@@ -41,5 +42,7 @@ public final class CommandResolver {
                     .addSubcommand("package", PACKAGE_SPEC)
                     .addSubcommand("test", TEST_SPEC)
             ).addSubcommand("package", PACKAGE_SPEC)
-            .addSubcommand("test", TEST_SPEC);
+            .addSubcommand("test", TEST_SPEC)
+            .addOption(CommandLine.Model.OptionSpec.builder("--help").usageHelp(true).build())
+            .addOption(CommandLine.Model.OptionSpec.builder("--version").versionHelp(true).build());
 }

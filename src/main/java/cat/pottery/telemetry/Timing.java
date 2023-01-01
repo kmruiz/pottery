@@ -1,5 +1,7 @@
 package cat.pottery.telemetry;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,11 +22,11 @@ public final class Timing {
         timings.put(id, System.currentTimeMillis());
     }
 
-    public void end(String id) {
+    public String end(String id) {
         timings.computeIfPresent(id, (k, v) -> System.currentTimeMillis() - v);
-    }
 
-    public Duration durationOf(String id) {
-        return Duration.ofMillis(timings.getOrDefault(id, 0l));
+        long millis = timings.getOrDefault(id, 0l);
+        return BigDecimal.valueOf(millis)
+                .divide(BigDecimal.valueOf(1000), 2, RoundingMode.HALF_UP) + " seconds";
     }
 }

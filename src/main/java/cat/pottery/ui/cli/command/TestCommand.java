@@ -87,11 +87,10 @@ public class TestCommand implements CliCommand {
         launcher.execute(request);
 
         boolean failed = showTestResults(listener.getSummary(), parseResult);
-        Timing.getInstance().end(TIMING_ID);
-        var duration = Timing.getInstance().durationOf(TIMING_ID);
-        Log.getInstance().info("Run tests in %dms", duration.toMillis());
+        var duration = Timing.getInstance().end(TIMING_ID);
+        Log.getInstance().info("Tests ran in %s.", duration);
 
-        if (failed) {
+        if (failed && !WatchCommand.IS_WATCHING) {
             System.exit(1);
         }
     }
