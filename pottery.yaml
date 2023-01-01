@@ -1,6 +1,7 @@
 parameters:
   junit.version: "5.9.1"
   snakeyaml.version: "1.33"
+  chalk.version: "1.0.2"
 
 artifact:
   group:    "cat.pottery"
@@ -9,13 +10,14 @@ artifact:
 
   platform:
     version: "17"
-    produces: "library"
+    produces: "native"
 
   manifest:
     main-class: "cat.pottery.ui.cli.Bootstrap"
 
   dependencies:
     - production: "org.yaml:snakeyaml:${snakeyaml.version}"
+    - production: "com.github.tomas-langer:chalk:${chalk.version}"
     - test: "org.junit.jupiter:junit-jupiter-api:${junit.version}"
   
     

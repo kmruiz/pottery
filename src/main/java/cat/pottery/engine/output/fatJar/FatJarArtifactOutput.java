@@ -11,7 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -42,10 +44,17 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
         }
 
         ZipOutputStream out = zos;
+        Set<String> addedEntries = new HashSet<>();
         classPath.forEach(dependency -> {
             var pathToJar = dependency.downloadPath();
             try (var zip = new ZipFile(pathToJar.toFile())) {
                 zip.stream().filter(e -> !e.getName().endsWith("META-INF/MANIFEST.MF")).forEach(depEntry -> {
+                    if (addedEntries.contains(depEntry.getName())) {
+                        return;
+                    }
+
+                    addedEntries.add(depEntry.getName());
+
                     ZipEntry output = new ZipEntry(depEntry.getName().replace(prefixToDelete, ""));
                     try {
                         out.putNextEntry(output);

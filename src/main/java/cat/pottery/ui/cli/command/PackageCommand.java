@@ -3,6 +3,7 @@ package cat.pottery.ui.cli.command;
 import cat.pottery.engine.compiler.IncrementalCompiler;
 import cat.pottery.engine.dependencies.DependencyResolver;
 import cat.pottery.engine.dependencies.DownloadManager;
+import cat.pottery.engine.dependencies.PomContextRegistry;
 import cat.pottery.engine.dependencies.maven.MavenDependency;
 import cat.pottery.engine.output.ArtifactOutput;
 import cat.pottery.engine.output.container.ContainerArtifactOutput;
@@ -16,14 +17,16 @@ import cat.pottery.ui.parser.result.ArtifactFileParserResult;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class PackageCommand implements CliCommand {
     @Override
     public void execute(String[] args) {
         var queue = new ArrayBlockingQueue<MavenDependency>(128);
-        var manager = new DownloadManager(queue, new HashMap<>(), 4);
+        var manager = new DownloadManager(queue, new ConcurrentHashMap<>(32, 1.2f, 4), 4);
+        var pomContextRegistry = new PomContextRegistry(new ConcurrentHashMap<>(32, 1.2f, 4));
 
-        var dependencyResolver = new DependencyResolver(manager, queue, 4);
+        var dependencyResolver = new DependencyResolver(manager, queue, 4, pomContextRegistry);
         var artifactDoc = (ArtifactFileParserResult.Success) new YamlArtifactFileParser().parse(Path.of("pottery.yaml"));
 
         var deps = dependencyResolver.downloadDependenciesOfArtifact(artifactDoc.document());

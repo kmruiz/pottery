@@ -54,7 +54,6 @@ public final class DownloadManager {
                 try {
                     Thread.sleep(5);
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
                 }
             }
 
@@ -68,6 +67,13 @@ public final class DownloadManager {
     }
 
     public Path downloadPathOfDependency(MavenDependency dependency) {
-        return Path.of(".pottery", "m2", dependency.groupId(), dependency.artifactId(), dependency.version(), dependency.artifactId() + "-" + dependency.version() + ".jar");
+        return Path.of(
+                ".pottery",
+                "m2",
+                dependency.groupId(),
+                dependency.artifactId(),
+                dependency.version(),
+                "%s-%s%s.%s".formatted(dependency.artifactId(), dependency.version(), dependency.classifier().map(e -> "-" + e).orElse(""), dependency.qualifier())
+        );
     }
 }

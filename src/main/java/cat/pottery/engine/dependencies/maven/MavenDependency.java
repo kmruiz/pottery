@@ -1,5 +1,7 @@
 package cat.pottery.engine.dependencies.maven;
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public record MavenDependency(
@@ -8,9 +10,10 @@ public record MavenDependency(
         String version,
         String type,
         Scope scope,
-        String qualifier
+        String qualifier,
+        Optional<String> classifier
 ) {
-    private static final Pattern VERSION_PATTERN = Pattern.compile("(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)");
+    private static final Pattern VERSION_PATTERN = Pattern.compile("(?<major>\\d+)\\.(?<minor>\\d+)(\\.(?<patch>\\d+))?");
 
     public boolean isSnapshot() {
         return version.endsWith("-SNAPSHOT");
@@ -30,11 +33,11 @@ public record MavenDependency(
 
         var thisMajor = Integer.parseInt(thisMatcher.group("major"));
         var thisMinor = Integer.parseInt(thisMatcher.group("minor"));
-        var thisPatch = Integer.parseInt(thisMatcher.group("patch"));
+        var thisPatch = Integer.parseInt(Objects.requireNonNullElse(thisMatcher.group("patch"), "0"));
 
         var otherMajor = Integer.parseInt(otherMatcher.group("major"));
         var otherMinor = Integer.parseInt(otherMatcher.group("minor"));
-        var otherPatch = Integer.parseInt(otherMatcher.group("patch"));
+        var otherPatch = Integer.parseInt(Objects.requireNonNullElse(otherMatcher.group("patch"), "0"));
 
         if (thisMajor != otherMajor) {
             return false;
@@ -49,7 +52,7 @@ public record MavenDependency(
 
     public MavenDependency max(MavenDependency dependency) {
         if (!isCompatibleWith(dependency)) {
-            return null;
+            return this;
         }
 
         var thisMatcher = VERSION_PATTERN.matcher(version);

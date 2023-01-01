@@ -4,17 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Support for building containers">
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/library/LibraryArtifactOutput.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/CliCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/CommandResolver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/PackageCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/WatchCommand.java" afterDir="false" />
+    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Watch command basic">
+      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/PomContextRegistry.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pottery.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pottery.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyDownloadWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyDownloadWorker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyResolver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DownloadManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DownloadManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/maven/MavenDependency.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/maven/MavenDependency.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/Bootstrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/PackageCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/PackageCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,25 +46,48 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/home/kevin/IdeaProjects/cat.json/serde",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="cat.pottery.engine.dependencies" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Package">
+    <configuration name="Bootstrap on cat.json" type="Application" factoryName="Application">
+      <envs>
+        <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
+        <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
+        <env name="CONTAINER_BUILDER" value="podman" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
+      <module name="pottery" />
+      <option name="PROGRAM_PARAMETERS" value="package" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../cat.json/serde" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cat.pottery.ui.cli.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Bootstrap" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
         <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
@@ -83,6 +107,24 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Package" type="Application" factoryName="Application">
+      <envs>
+        <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
+        <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
+        <env name="CONTAINER_BUILDER" value="podman" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
+      <module name="pottery" />
+      <option name="PROGRAM_PARAMETERS" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Bootstrap on cat.json" />
+      <item itemvalue="Application.Package" />
+      <item itemvalue="Application.Bootstrap" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Bootstrap" />
@@ -99,7 +141,13 @@
       <updated>1665864897567</updated>
       <workItem from="1665864898702" duration="19086000" />
       <workItem from="1665935477929" duration="1765000" />
-      <workItem from="1666027219173" duration="272000" />
+      <workItem from="1666027219173" duration="618000" />
+      <workItem from="1666028041138" duration="419000" />
+      <workItem from="1666028480298" duration="14000" />
+      <workItem from="1666028527091" duration="8000" />
+      <workItem from="1666029636006" duration="2000" />
+      <workItem from="1666110676659" duration="1953000" />
+      <workItem from="1672599590823" duration="4310000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -150,7 +198,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665886219846</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Watch command basic">
+      <created>1666027520034</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1666027520034</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -174,6 +229,28 @@
     <MESSAGE value="Some optimizations" />
     <MESSAGE value="now supports generating native images" />
     <MESSAGE value="Support for building containers" />
-    <option name="LAST_COMMIT_MESSAGE" value="Support for building containers" />
+    <MESSAGE value="Watch command basic" />
+    <option name="LAST_COMMIT_MESSAGE" value="Watch command basic" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/maven/MavenDependency.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/maven/MavenDependency.java</url>
+          <line>49</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/maven/MavenDependency.java</url>
+          <line>53</line>
+          <option name="timeStamp" value="42" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

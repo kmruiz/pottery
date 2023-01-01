@@ -1,32 +1,32 @@
 package cat.pottery.engine.dependencies;
 
 import cat.pottery.engine.dependencies.maven.MavenDependency;
-import cat.pottery.ui.parser.YamlArtifactFileParser;
-import cat.pottery.ui.parser.result.ArtifactFileParserResult;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutionException;
+
+import static org.w3c.dom.Node.ELEMENT_NODE;
 
 public final class DependencyDownloadWorker implements Runnable {
     private final Queue<MavenDependency> dependenciesToDownload;
     private final DownloadManager downloadManager;
     private final HttpClient httpClient;
     private final DocumentBuilder xmlBuilder;
+    private final PomContextRegistry pomContextRegistry;
 
-    public DependencyDownloadWorker(DownloadManager downloadManager, Queue<MavenDependency> dependenciesToDownload) {
+    public DependencyDownloadWorker(DownloadManager downloadManager, Queue<MavenDependency> dependenciesToDownload, PomContextRegistry pomContextRegistry) {
         this.dependenciesToDownload = dependenciesToDownload;
         this.downloadManager = downloadManager;
+        this.pomContextRegistry = pomContextRegistry;
         this.httpClient = HttpClient.newBuilder().build();
         var factory = DocumentBuilderFactory.newInstance();
         try {
@@ -64,14 +64,49 @@ public final class DependencyDownloadWorker implements Runnable {
             var project = doc.getDocumentElement();
 
             Node dependenciesElement = null;
+            Node propertiesElement = null;
+
+            boolean hasParent = false;
+            String groupId = null, artifactId = null, version = "<default>";
+            String parentGroupId = null, parentArtifactId = null, parentVersion = "<default>";
 
             for (var i = 0; i < project.getChildNodes().getLength(); i++) {
                 var node = project.getChildNodes().item(i);
                 if (node.getNodeName().equals("dependencies")) {
                     dependenciesElement = node;
-                    break;
+                } else if (node.getNodeName().equals("properties")) {
+                    propertiesElement = node;
+                } else if (node.getNodeName().equals("groupId")) {
+                    groupId = node.getTextContent();
+                } else if (node.getNodeName().equals("artifactId")) {
+                    artifactId = node.getTextContent();
+                } else if (node.getNodeName().equals("version")) {
+                    version = node.getTextContent();
+                } else if (node.getNodeName().equals("parent")) {
+                    hasParent = true;
+                    for (var j = 0; j < node.getChildNodes().getLength(); j++) {
+                        var parentNode = node.getChildNodes().item(j);
+                        if (parentNode.getNodeName().equals("groupId")) {
+                            parentGroupId = parentNode.getTextContent();
+                        } else if (parentNode.getNodeName().equals("artifactId")) {
+                            parentArtifactId = parentNode.getTextContent();
+                        } else if (parentNode.getNodeName().equals("version")) {
+                            parentVersion = parentNode.getTextContent();
+                        }
+                    }
                 }
+            }
 
+            var context = hasParent ? pomContextRegistry.registerFromParent(parentGroupId, parentArtifactId, parentVersion, groupId, artifactId, version)
+                    : pomContextRegistry.register(groupId, artifactId, version);
+
+            if (propertiesElement != null) {
+                for (var i = 0; i < propertiesElement.getChildNodes().getLength(); i++) {
+                    var property = propertiesElement.getChildNodes().item(i);
+                    if (property.getNodeType() == ELEMENT_NODE) {
+                        pomContextRegistry.addParameter(context, property.getNodeName(), property.getTextContent());
+                    }
+                }
             }
 
             if (dependenciesElement == null) {
@@ -85,26 +120,41 @@ public final class DependencyDownloadWorker implements Runnable {
                     continue;
                 }
 
-                String groupId = null, artifactId = null, version = null;
-                MavenDependency.Scope scope = MavenDependency.Scope.TEST;
+                String depGroupId = null, depArtifactId = null, depVersion = null;
+                MavenDependency.Scope scope = MavenDependency.Scope.RUNTIME;
+                Optional<String> classifier = Optional.empty();
 
                 for (var j = 0; j < dependency.getChildNodes().getLength(); j++) {
                     var dependencyAttr = dependency.getChildNodes().item(j);
                     switch (dependencyAttr.getNodeName()) {
-                        case "groupId" -> groupId = dependencyAttr.getTextContent();
-                        case "artifactId" -> artifactId = dependencyAttr.getTextContent();
-                        case "version" -> version = dependencyAttr.getTextContent();
+                        case "groupId" -> depGroupId = dependencyAttr.getTextContent();
+                        case "artifactId" -> depArtifactId = dependencyAttr.getTextContent();
+                        case "version" -> depVersion = dependencyAttr.getTextContent();
                         case "scope" -> scope = MavenDependency.Scope.valueOf(dependencyAttr.getTextContent().trim().toUpperCase());
+                        case "classifier" -> classifier = Optional.of(dependencyAttr.getTextContent());
                     }
                 }
 
-                dependencies.add(new MavenDependency(groupId, artifactId, version, "jar", scope, "jar"));
+                dependencies.add(
+                        new MavenDependency(
+                                pomContextRegistry.resolveExpression(context, depGroupId),
+                                pomContextRegistry.resolveExpression(context, depArtifactId),
+                                pomContextRegistry.resolveExpression(context, depVersion),
+                                "jar",
+                                scope,
+                                "jar",
+                                classifier
+                        )
+                );
             }
 
             return dependencies;
+        } catch (FileNotFoundException e) {
+            return Collections.emptyList();
         } catch (Throwable e) {
-            System.out.println("For " + mavenDependency + ": " + pomDownloadUrl(mavenDependency));
-            throw new RuntimeException(e);
+            System.err.println("For " + mavenDependency + ": " + pomDownloadUrl(mavenDependency));
+            e.printStackTrace(System.err);
+            return Collections.emptyList();
         }
     }
 
@@ -140,7 +190,7 @@ public final class DependencyDownloadWorker implements Runnable {
                 dependency.groupId().replaceAll("\\.", "/"),
                 dependency.artifactId(),
                 dependency.version(),
-                "%s-%s.%s".formatted(dependency.artifactId(), dependency.version(), qualifier)
+                "%s-%s%s.%s".formatted(dependency.artifactId(), dependency.version(), dependency.classifier().map(e -> "-" + e).orElse(""), qualifier)
         );
     }
 
