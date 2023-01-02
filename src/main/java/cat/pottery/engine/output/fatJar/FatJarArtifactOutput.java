@@ -24,6 +24,8 @@ import java.util.zip.ZipOutputStream;
 public final class FatJarArtifactOutput implements ArtifactOutput {
     private static final String TIMING_ID = "generate-output";
     private final Toolchain toolchain;
+    private static boolean wasBuiltAlready = false;
+
 
     public FatJarArtifactOutput(Toolchain toolchain) {
         this.toolchain = toolchain;
@@ -31,9 +33,14 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
 
     @Override
     public void generateArtifact(ArtifactDocument artifactDocument, Path compilerOutput, List<DownloadedDependency> classPath, Path outputPath) {
+        if (wasBuiltAlready) {
+            return;
+        }
+
         Timing.getInstance().start(TIMING_ID);
         var outputFile = outputPath.resolve(artifactDocument.artifact().id() + "-" + artifactDocument.artifact().version() + "-fat.jar-tmp");
         var outputFileFinal = outputPath.resolve(artifactDocument.artifact().id() + "-" + artifactDocument.artifact().version() + "-fat.jar");
+
         ZipOutputStream zos = null;
         final boolean[] hasManifest = {false};
         var prefixToDelete = compilerOutput.toString() + "/";
@@ -126,6 +133,7 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
                 Files.move(outputFile, outputFileFinal);
                 var duration = Timing.getInstance().end(TIMING_ID);
                 Log.getInstance().info("Built fatJar %s in %s.", outputFileFinal.toString(), duration);
+                wasBuiltAlready = true;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -133,6 +141,9 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
             try {
                 out.close();
                 Files.move(outputFile, outputFileFinal);
+                var duration = Timing.getInstance().end(TIMING_ID);
+                Log.getInstance().info("Built fatJar %s in %s.", outputFileFinal.toString(), duration);
+                wasBuiltAlready = true;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Simple watch and test">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyDownloadWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyDownloadWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/PomContextRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/PomContextRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/container/ContainerArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/container/ContainerArtifactOutput.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/Platform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/artifact/Platform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/PackageCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/PackageCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/YamlArtifactFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/parser/YamlArtifactFileParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +66,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.cat.json - Test">
+  <component name="RunManager" selected="Application.cat.json - Package">
     <configuration name="Package" type="Application" factoryName="Application">
       <envs>
         <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
@@ -197,7 +199,7 @@
       <workItem from="1666029636006" duration="2000" />
       <workItem from="1666110676659" duration="1953000" />
       <workItem from="1672599590823" duration="14924000" />
-      <workItem from="1672686422379" duration="3976000" />
+      <workItem from="1672686422379" duration="6902000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -290,7 +292,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672615297288</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Simple watch and test">
+      <created>1672690495240</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1672690495240</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -331,8 +340,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java</url>
-          <line>77</line>
+          <line>84</line>
           <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="93" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

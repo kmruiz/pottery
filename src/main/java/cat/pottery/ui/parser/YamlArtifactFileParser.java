@@ -27,6 +27,7 @@ public class YamlArtifactFileParser implements ArtifactFileParser {
 
         var paramMap = (Map<String, String>) dom.getOrDefault("parameters", Map.of());
         var artifact = (Map<String, Object>) dom.get("artifact");
+        var platformProduceNormalisedList = new ArrayList<String>(5);
 
         if (artifact == null) {
             return new ArtifactFileParserResult.Failure(List.of(new ArtifactFileParserResult.ErrorMessage("Document does not contain an artifact section.")));
@@ -36,9 +37,15 @@ public class YamlArtifactFileParser implements ArtifactFileParser {
         var artifactId = artifact.get("id").toString();
         var version = artifact.get("version").toString();
 
-        var platform = (Map<String, String>) artifact.get("platform");
-        var platformVersion = platform.get("version");
-        var platformProduces = platform.get("produces");
+        var platform = (Map<String, Object>) artifact.get("platform");
+        var platformVersion = (String) platform.get("version");
+        Object platformProduces = platform.getOrDefault("produces", Collections.emptyList());
+
+        if (platformProduces instanceof String) {
+            platformProduceNormalisedList.add(platformProduces.toString());
+        } else if (platformProduces instanceof List) {
+            platformProduceNormalisedList.addAll((Collection<? extends String>) platformProduces);
+        }
 
         var manifest = (HashMap<String, String>) artifact.getOrDefault("manifest", new HashMap<>());
         var mainClass = manifest.getOrDefault("main-class", "").toString();
@@ -65,7 +72,7 @@ public class YamlArtifactFileParser implements ArtifactFileParser {
                                 artifactGroup,
                                 artifactId,
                                 version,
-                                new Platform(platformVersion, platformProduces),
+                                new Platform(platformVersion, platformProduceNormalisedList),
                                 parsedDependencies,
                                 new Manifest(mainClass)
                         )

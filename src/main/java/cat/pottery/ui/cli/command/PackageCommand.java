@@ -48,22 +48,26 @@ public final class PackageCommand implements CliCommand {
             }
         }
 
-        ArtifactOutput artifactOutput = switch (artifactDoc.document().artifact().platform().produces().toLowerCase()) {
-            case "fatjar" -> new FatJarArtifactOutput(Toolchain.systemDefault());
-            case "native" -> new NativeImageArtifactOutput(Toolchain.systemDefault(), new FatJarArtifactOutput(Toolchain.systemDefault()));
-            case "container" -> new ContainerArtifactOutput(Toolchain.systemDefault(), new FatJarArtifactOutput(Toolchain.systemDefault()));
-            case "library" -> new LibraryArtifactOutput();
-            default -> throw new Error();
-        };
+        for (var produces : artifactDoc.document().artifact().platform().produces()) {
+            ArtifactOutput artifactOutput = switch (produces.toLowerCase()) {
+                case "fatjar" -> new FatJarArtifactOutput(Toolchain.systemDefault());
+                case "native" -> new NativeImageArtifactOutput(Toolchain.systemDefault(), new FatJarArtifactOutput(Toolchain.systemDefault()));
+                case "container" -> new ContainerArtifactOutput(Toolchain.systemDefault(), new FatJarArtifactOutput(Toolchain.systemDefault()));
+                case "docker" -> new ContainerArtifactOutput(Toolchain.systemDefault(), new FatJarArtifactOutput(Toolchain.systemDefault()));
+                case "library" -> new LibraryArtifactOutput();
+                default -> throw new Error();
+            };
 
-        artifactOutput.generateArtifact(
-                artifactDoc.document(),
-                Path.of("target", "classes"),
-                deps,
-                Path.of("target")
-        );
+            artifactOutput.generateArtifact(
+                    artifactDoc.document(),
+                    Path.of("target", "classes"),
+                    deps,
+                    Path.of("target")
+            );
+        }
+
 
         var duration = Timing.getInstance().end(TIMING_ID);
-        Log.getInstance().info("Package done in %s.", duration);
+        Log.getInstance().info("All packages built in %s.", duration);
     }
 }
