@@ -9,11 +9,13 @@ public final class CommandResolver {
             case "watch" -> new WatchCommand();
             case "package" -> new PackageCommand();
             case "test" -> new TestCommand();
+            case "idea" -> new IdeaCommand();
             default -> new PackageCommand();
         };
     }
 
     private static CommandLine.Model.CommandSpec PACKAGE_SPEC = CommandLine.Model.CommandSpec.create();
+    private static CommandLine.Model.CommandSpec IDEA_SPEC = CommandLine.Model.CommandSpec.create();
 
     private static CommandLine.Model.CommandSpec TEST_SPEC = CommandLine.Model.CommandSpec.create()
             .addOption(CommandLine.Model.OptionSpec.builder("-v", "--verbose")
@@ -43,6 +45,7 @@ public final class CommandResolver {
                     .addSubcommand("test", TEST_SPEC)
             ).addSubcommand("package", PACKAGE_SPEC)
             .addSubcommand("test", TEST_SPEC)
+            .addSubcommand("idea", IDEA_SPEC)
             .addOption(CommandLine.Model.OptionSpec.builder("--help").usageHelp(true).build())
             .addOption(CommandLine.Model.OptionSpec.builder("--version").versionHelp(true).build());
 }
