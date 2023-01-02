@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Fix download path">
-      <change afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/IdeaCommand.java" afterDir="false" />
+    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Placeholder for IDEA">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/CommandResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/CommandResolver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,7 +200,7 @@
       <workItem from="1666029636006" duration="2000" />
       <workItem from="1666110676659" duration="1953000" />
       <workItem from="1672599590823" duration="14924000" />
-      <workItem from="1672686422379" duration="10993000" />
+      <workItem from="1672686422379" duration="11179000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -385,7 +384,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672697238731</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Placeholder for IDEA">
+      <created>1672697428513</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1672697428513</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -421,7 +427,8 @@
     <MESSAGE value=".gitignore updated" />
     <MESSAGE value="Do not require the graalvm" />
     <MESSAGE value="Fix download path" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix download path" />
+    <MESSAGE value="Placeholder for IDEA" />
+    <option name="LAST_COMMIT_MESSAGE" value="Placeholder for IDEA" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -443,7 +450,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java</url>
-          <line>151</line>
+          <line>158</line>
           <option name="timeStamp" value="95" />
         </line-breakpoint>
       </breakpoints>

@@ -38,7 +38,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
 public class TestCommand implements CliCommand {
     private static final String TIMING_ID = "test-command";
@@ -56,7 +55,7 @@ public class TestCommand implements CliCommand {
         var deps = dependencyResolver.downloadDependenciesOfArtifact(artifactDoc.document());
         var compiler = new IncrementalCompiler(Toolchain.systemDefault());
         var targetClassesPath = Path.of("target", "classes");
-        var targetTestClassesPath = Path.of("target", "test-classes");
+        var targetTestClassesPath = Path.of("target", "test-classes-x");
 
         var process = compiler.compileTree(artifactDoc.document(), Path.of("src", "main", "java").toAbsolutePath(), targetClassesPath.toAbsolutePath(), deps);
 
@@ -69,6 +68,13 @@ public class TestCommand implements CliCommand {
         }
 
         process = compiler.compileTree(artifactDoc.document(), Path.of("src", "test", "java").toAbsolutePath(), targetTestClassesPath.toAbsolutePath(), deps);
+        if (process != null) {
+            try {
+                process.waitFor();
+            } catch (InterruptedException e) {
+
+            }
+        }
 
         URLClassLoader cl = null;
         try {
