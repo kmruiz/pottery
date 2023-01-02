@@ -8,13 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SampleTest {
     @Test
-    @Tags({ @Tag("unit") })
-    void sample() {
-        assertTrue(false);
-    }
-
-    @Test
-    @Tags({ @Tag("unit") })
+    @Tags({ @Tag("sample") })
     void samplework() {
         assertTrue(true);
     }

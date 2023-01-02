@@ -1,5 +1,7 @@
 package cat.pottery.engine.toolchain;
 
+import cat.pottery.telemetry.Log;
+
 import java.nio.file.Path;
 
 public final class Toolchain {
@@ -13,17 +15,37 @@ public final class Toolchain {
         this.containerBuilder = containerBuilder;
     }
 
+    static {
+        String javaHome = System.getenv("JAVA_HOME");
+        String graalvmHome = System.getenv("GRAALVM_HOME");
+        String containerBuilder = System.getenv("CONTAINER_BUILDER");
+
+        if (javaHome == null) {
+            if (graalvmHome == null) {
+                Log.getInstance().error("Neither JAVA_HOME or GRAALVM_HOME are defined. Make sure you have the JDK downloaded and installed.");
+                Log.getInstance().info("You can download the latest Open JDK from Adoptium: https://adoptium.net/");
+                System.exit(1);
+            }
+
+            Log.getInstance().warn("JAVA_HOME is not set up. We are defaulting to GRAALVM_HOME which is configured properly.");
+        }
+
+        if (containerBuilder == null) {
+            Log.getInstance().warn("CONTAINER_BUILDER is not configured. Packaging a 'container' or 'docker' artifact won't work.");
+        }
+    }
+
     public static Toolchain systemDefault() {
         String javaHome = System.getenv("JAVA_HOME");
         String graalvmHome = System.getenv("GRAALVM_HOME");
         String containerBuilder = System.getenv("CONTAINER_BUILDER");
 
         if (javaHome == null) {
-            javaHome = graalvmHome;
-        }
+            if (graalvmHome == null) {
+                System.exit(1);
+            }
 
-        if (javaHome == null) {
-            throw new Error();
+            javaHome = graalvmHome;
         }
 
         return new Toolchain(Path.of(javaHome), graalvmHome == null ? null : Path.of(graalvmHome), containerBuilder == null ? null : Path.of(containerBuilder));

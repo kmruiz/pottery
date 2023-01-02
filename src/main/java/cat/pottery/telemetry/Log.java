@@ -5,8 +5,10 @@ import com.github.tomaslanger.chalk.Chalk;
 public final class Log {
     private Log() {}
 
+    private static final Log INSTANCE = new Log();
+
     public static Log getInstance() {
-        return new Log();
+        return INSTANCE;
     }
 
     public synchronized void info(String fmt, Object ...params) {
