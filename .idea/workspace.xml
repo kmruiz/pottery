@@ -8,6 +8,9 @@
       <change beforePath="$PROJECT_DIR$/.github/workflows/release.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/release.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pottery.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pottery.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/sh/pottery.sh" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/sh/pottery.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,7 +198,7 @@
       <workItem from="1666029636006" duration="2000" />
       <workItem from="1666110676659" duration="1953000" />
       <workItem from="1672599590823" duration="14924000" />
-      <workItem from="1672686422379" duration="8320000" />
+      <workItem from="1672686422379" duration="9317000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -323,7 +326,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672694520709</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Try releasing">
+      <created>1672694762374</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1672694762374</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

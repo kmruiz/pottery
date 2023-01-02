@@ -16,17 +16,19 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Maven build package
-        run: mvn --batch-mode --update-snapshots -Dmaven.test.skip=true package
+      - name: Pottery build fatJar
+        environment:
+          POTTERY_VERSION: 0.0.1
+        run: ./src/main/sh/pottery.sh package
       - name: Upload Jar Artifact
         uses: JasonEtco/upload-to-release@master
         with:
-          args: target/pottery-${{ github.event.release.tag_name }}-jar-with-dependencies.jar application/zip
+          args: target/pottery-${{ github.event.release.tag_name }}-fat.jar application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate md5 checksum
-        run: md5sum < target/pottery-${{ github.event.release.tag_name }}-jar-with-dependencies.jar | awk '{print $1}' > target/pottery-${{ github.event.release.tag_name }}-jar-with-dependencies.jar.md5
+        run: md5sum < target/pottery-${{ github.event.release.tag_name }}-fat.jar | awk '{print $1}' > target/pottery-${{ github.event.release.tag_name }}-fat.jar.md5
 
       - name: Upload md5 checksum
         uses: JasonEtco/upload-to-release@master
