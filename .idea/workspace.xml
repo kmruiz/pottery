@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Fix download path">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/test.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/telemetry/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/telemetry/Log.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/sh/pottery.sh" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/sh/pottery.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/pottery/SampleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/pottery/SampleTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +44,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/home/kevin/IdeaProjects/pottery/.github/workflows",
+    "last_opened_file_path": "/home/kevin/IdeaProjects/pottery/.pottery",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -63,11 +59,12 @@
       <recent name="cat.pottery.engine.dependencies" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.pottery" />
       <recent name="$PROJECT_DIR$/.github/workflows" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.pottery - Package">
+  <component name="RunManager" selected="Application.pottery - Test">
     <configuration name="Package" type="Application" factoryName="Application">
       <envs>
         <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
@@ -200,7 +197,7 @@
       <workItem from="1666029636006" duration="2000" />
       <workItem from="1666110676659" duration="1953000" />
       <workItem from="1672599590823" duration="14924000" />
-      <workItem from="1672686422379" duration="10489000" />
+      <workItem from="1672686422379" duration="10809000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -370,7 +367,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672696208942</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Fix download path">
+      <created>1672696920943</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1672696920943</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -425,6 +429,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java</url>
           <line>35</line>
           <option name="timeStamp" value="93" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java</url>
+          <line>151</line>
+          <option name="timeStamp" value="95" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

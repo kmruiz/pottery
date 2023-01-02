@@ -31,6 +31,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -148,7 +149,13 @@ public class TestCommand implements CliCommand {
     }
 
     private List<? extends DiscoverySelector> allPackageSelector(Path testFolder) {
-        return Arrays.stream(testFolder.toFile().listFiles(File::isDirectory)).sorted()
+        File[] allBaseDirectories = testFolder.toFile().listFiles(File::isDirectory);
+        if (allBaseDirectories == null) {
+            Log.getInstance().warn("Could not find any test directories in %s", testFolder);
+            return Collections.emptyList();
+        }
+
+        return Arrays.stream(allBaseDirectories).sorted()
                 .map(File::getName)
                 .map(DiscoverySelectors::selectPackage)
                 .toList();
