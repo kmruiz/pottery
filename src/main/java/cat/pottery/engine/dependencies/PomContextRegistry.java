@@ -1,5 +1,7 @@
 package cat.pottery.engine.dependencies;
 
+import cat.pottery.engine.dependencies.maven.MavenDependency;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -8,26 +10,33 @@ public final class PomContextRegistry {
 
     private static final String ID_FORMAT = "%s:%s:%s";
 
-    private record Context(String parentGroup, String parentId, String parentVersion, Map<String, String> parameters) {}
+    private record Context(String parentContext, ConcurrentHashMap<String, String> parameters) {}
     private final Map<String, Context> contextMap;
 
     public PomContextRegistry(Map<String, Context> contextMap) {
         this.contextMap = contextMap;
     }
 
+    public String contextIdFor(MavenDependency mavenDependency) {
+        return ID_FORMAT.formatted(mavenDependency.groupId(), mavenDependency.artifactId(), mavenDependency.version());
+    }
+
+    public String contextIdFor(String group, String artifact, String version) {
+        return ID_FORMAT.formatted(group, artifact, version);
+    }
+
     public String registerFromParent(String parentGroup, String parentId, String parentVersion, String group, String id, String version) {
-        var parentContextId = ID_FORMAT.formatted(parentGroup, parentId, parentVersion);
+        var parentContextId = contextIdFor(parentGroup, parentId, parentVersion);
         if (!contextMap.containsKey(parentContextId)) {
-            contextMap.put(parentContextId, new Context(parentGroup, parentId, parentVersion, new ConcurrentHashMap<>()));
+            contextMap.put(parentContextId, new Context(null, new ConcurrentHashMap<>()));
         }
 
-        var parameters = new ConcurrentHashMap<>(contextMap.get(ID_FORMAT.formatted(parentGroup, parentId, parentVersion)).parameters());
+        var parameters = new ConcurrentHashMap<String, String>(0);
         parameters.put("project.version", version);
-        var ctx = new Context(parentGroup, parentId, parentVersion,
-                parameters
-        );
 
-        String newId = ID_FORMAT.formatted(group, id, version);
+        var ctx = new Context(parentContextId, parameters);
+
+        var newId = contextIdFor(group, id, version);
         contextMap.put(newId, ctx);
 
         return newId;
@@ -37,11 +46,9 @@ public final class PomContextRegistry {
         var parameters = new ConcurrentHashMap<String, String>();
         parameters.put("project.version", version);
 
-        var ctx = new Context(group, id, version,
-                parameters
-        );
+        var ctx = new Context(null, parameters);
 
-        String newId = ID_FORMAT.formatted(group, id, version);
+        var newId = contextIdFor(group, id, version);
         contextMap.put(newId, ctx);
 
         return newId;
@@ -52,15 +59,37 @@ public final class PomContextRegistry {
     }
 
     public String resolveExpression(String id, String expression) {
+        if (expression == null) {
+            return "";
+        }
+
+        var result = expression;
+        while (result.contains("${") && result.contains("}")) {
+            result = resolveExpressionCycle(id, result);
+        }
+
+        return result;
+    }
+
+    private String resolveExpressionCycle(String id, String expression) {
         var ref = new AtomicReference<>(expression);
 
-        contextMap.get(id).parameters().forEach((key, value) -> {
+        Context context = contextMap.get(id);
+        context.parameters().forEach((key, value) -> {
             var toReplace = "${" + key + "}";
             if (ref.get().contains(toReplace)) {
-                ref.set(ref.get().replace(toReplace, value));
+                ref.getAndUpdate(x -> x.replace(toReplace, value));
             }
         });
 
+        if (context.parentContext != null) {
+            ref.getAndUpdate(x -> resolveExpressionCycle(context.parentContext, x));
+        }
+
         return ref.get();
+    }
+
+    public boolean hasContext(String id) {
+        return contextMap.containsKey(id);
     }
 }

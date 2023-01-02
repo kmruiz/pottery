@@ -10,7 +10,9 @@ import cat.pottery.telemetry.Log;
 import cat.pottery.telemetry.Timing;
 import cat.pottery.ui.parser.YamlArtifactFileParser;
 import cat.pottery.ui.parser.result.ArtifactFileParserResult;
+import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherConfig;
@@ -20,6 +22,7 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import picocli.CommandLine;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -27,6 +30,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -77,7 +82,7 @@ public class TestCommand implements CliCommand {
         Thread.currentThread().setContextClassLoader(cl);
         SummaryGeneratingListener listener = new SummaryGeneratingListener();
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectPackage("pottery"))
+                .selectors(allPackageSelector(targetTestClassesPath))
                 .filters(includeClassNamePatterns(".*Test"))
                 .build();
         Launcher launcher = LauncherFactory.create(LauncherConfig.builder()
@@ -140,5 +145,13 @@ public class TestCommand implements CliCommand {
         }
 
         return failed;
+    }
+
+    private List<? extends DiscoverySelector> allPackageSelector(Path testFolder) {
+        return Arrays.stream(testFolder.toFile().listFiles(File::isDirectory)).sorted()
+                .map(File::getName)
+                .map(DiscoverySelectors::selectPackage)
+                .toList();
+
     }
 }

@@ -51,6 +51,10 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
         Set<String> addedEntries = new HashSet<>();
         classPath.forEach(dependency -> {
             var pathToJar = dependency.downloadPath();
+            if (!pathToJar.getFileName().toString().endsWith(".jar")) {
+                return;
+            }
+
             try (var zip = new ZipFile(pathToJar.toFile())) {
                 zip.stream().filter(e -> !e.getName().endsWith("META-INF/MANIFEST.MF")).forEach(depEntry -> {
                     if (addedEntries.contains(depEntry.getName())) {

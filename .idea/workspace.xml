@@ -4,19 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Now can test">
+    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Simple watch and test">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pottery.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pottery.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyDownloadWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyDownloadWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/container/ContainerArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/container/ContainerArtifactOutput.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/PomContextRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/PomContextRegistry.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/library/LibraryArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/library/LibraryArtifactOutput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/nativeImage/NativeImageArtifactOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/nativeImage/NativeImageArtifactOutput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/telemetry/Timing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/telemetry/Timing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/CommandResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/CommandResolver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/PackageCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/PackageCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/WatchCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/WatchCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,22 +40,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/home/kevin/IdeaProjects/pottery",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/kevin/IdeaProjects/pottery&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="cat.pottery.engine.dependencies" />
@@ -71,8 +64,34 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Package">
-    <configuration name="Bootstrap on cat.json" type="Application" factoryName="Application">
+  <component name="RunManager" selected="Application.cat.json - Test">
+    <configuration name="Package" type="Application" factoryName="Application">
+      <envs>
+        <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
+        <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
+        <env name="CONTAINER_BUILDER" value="podman" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
+      <module name="pottery" />
+      <option name="PROGRAM_PARAMETERS" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Pottery - Watch" type="Application" factoryName="Application" folderName="Pottery">
+      <envs>
+        <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
+        <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
+        <env name="CONTAINER_BUILDER" value="podman" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
+      <module name="pottery" />
+      <option name="PROGRAM_PARAMETERS" value="watch --polling-interval 400 test" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="cat.json - Package" type="Application" factoryName="Application" folderName="cat.json">
       <envs>
         <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
         <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
@@ -92,7 +111,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Bootstrap" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="cat.json - Test" type="Application" factoryName="Application" folderName="cat.json">
       <envs>
         <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
         <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
@@ -100,31 +119,13 @@
       </envs>
       <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
       <module name="pottery" />
-      <option name="PROGRAM_PARAMETERS" value="watch" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="cat.pottery.ui.cli.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+      <option name="PROGRAM_PARAMETERS" value="test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../cat.json/serde" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Package" type="Application" factoryName="Application">
-      <envs>
-        <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
-        <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
-        <env name="CONTAINER_BUILDER" value="podman" />
-      </envs>
-      <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
-      <module name="pottery" />
-      <option name="PROGRAM_PARAMETERS" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Test" type="Application" factoryName="Application">
+    <configuration name="pottery - Package" type="Application" factoryName="Application" folderName="Pottery">
       <envs>
         <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
         <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
@@ -137,7 +138,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Watch" type="Application" factoryName="Application">
+    <configuration name="pottery - Test" type="Application" factoryName="Application" folderName="Pottery">
       <envs>
         <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
         <env name="JAVA_HOME" value="/etc/jdk/jdk-18.0.1+10" />
@@ -145,7 +146,7 @@
       </envs>
       <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
       <module name="pottery" />
-      <option name="PROGRAM_PARAMETERS" value="watch --polling-interval 400 test" />
+      <option name="PROGRAM_PARAMETERS" value="test" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -166,17 +167,16 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.Bootstrap on cat.json" />
-      <item itemvalue="Application.Package" />
-      <item itemvalue="Application.Test" />
-      <item itemvalue="Application.Watch" />
-      <item itemvalue="Application.Bootstrap" />
+      <item itemvalue="Application.cat.json - Package" />
+      <item itemvalue="Application.cat.json - Test" />
+      <item itemvalue="Application.pottery - Package" />
+      <item itemvalue="Application.Pottery - Watch" />
+      <item itemvalue="Application.pottery - Test" />
       <item itemvalue="JUnit.SampleTest" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.SampleTest" />
-        <item itemvalue="Application.Bootstrap" />
       </list>
     </recent_temporary>
   </component>
@@ -196,7 +196,8 @@
       <workItem from="1666028527091" duration="8000" />
       <workItem from="1666029636006" duration="2000" />
       <workItem from="1666110676659" duration="1953000" />
-      <workItem from="1672599590823" duration="14558000" />
+      <workItem from="1672599590823" duration="14924000" />
+      <workItem from="1672686422379" duration="3976000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -282,7 +283,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672614209572</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Simple watch and test">
+      <created>1672615297288</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1672615297288</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -310,7 +318,8 @@
     <MESSAGE value="Basic dependency resolution" />
     <MESSAGE value="Improve CLI experience" />
     <MESSAGE value="Now can test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Now can test" />
+    <MESSAGE value="Simple watch and test" />
+    <option name="LAST_COMMIT_MESSAGE" value="Simple watch and test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -321,12 +330,19 @@
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <condition expression="artifactId.contains(&quot;jmh&quot;)" language="JAVA" />
-          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/dependencies/DependencyDownloadWorker.java</url>
-          <line>101</line>
-          <option name="timeStamp" value="52" />
+          <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/engine/output/fatJar/FatJarArtifactOutput.java</url>
+          <line>77</line>
+          <option name="timeStamp" value="92" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="pomContextRegistry.hasContext(pomContextRegistry.contextIdFor(parentDependency))" language="JAVA" />
+        <watch expression="pomDownloadUrl(parentDependency)" language="JAVA" />
+        <watch expression="node.getNodeName()" language="JAVA" />
+        <watch expression="pomDownloadUrl(mavenDependency)" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

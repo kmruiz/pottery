@@ -19,6 +19,11 @@ import java.util.*;
 import static org.w3c.dom.Node.ELEMENT_NODE;
 
 public final class DependencyDownloadWorker implements Runnable {
+    private record TransitiveDependencies(
+            Optional<MavenDependency> parentDependency,
+            List<MavenDependency> mavenDependencies
+    ) {}
+
     private final Queue<MavenDependency> dependenciesToDownload;
     private final DownloadManager downloadManager;
     private final HttpClient httpClient;
@@ -49,7 +54,17 @@ public final class DependencyDownloadWorker implements Runnable {
 
             // first find transitive dependencies and offer them to download
             var transitiveDependencies = findTransitiveDependencies(toDownload);
-            transitiveDependencies.forEach(downloadManager::trackTransitiveDependency);
+
+            if (transitiveDependencies.parentDependency.isPresent()) {
+                var parentDependency = transitiveDependencies.parentDependency.get();
+                if (!pomContextRegistry.hasContext(pomContextRegistry.contextIdFor(parentDependency))) {
+                    downloadManager.trackTransitiveDependency(parentDependency);
+                    dependenciesToDownload.offer(toDownload);
+                    continue;
+                }
+            }
+
+            transitiveDependencies.mavenDependencies.forEach(downloadManager::trackTransitiveDependency);
 
             // now download the jar
             if (shouldDownload(toDownload)) {
@@ -60,17 +75,18 @@ public final class DependencyDownloadWorker implements Runnable {
         downloadManager.finished();
     }
 
-    private List<MavenDependency> findTransitiveDependencies(MavenDependency mavenDependency) {
+    private TransitiveDependencies findTransitiveDependencies(MavenDependency mavenDependency) {
         try {
             var doc = xmlBuilder.parse(pomDownloadUrl(mavenDependency));
             var project = doc.getDocumentElement();
 
             Node dependenciesElement = null;
             Node propertiesElement = null;
+            MavenDependency parentDependency = null;
 
             boolean hasParent = false;
-            String groupId = null, artifactId = null, version = "<default>";
-            String parentGroupId = null, parentArtifactId = null, parentVersion = "<default>";
+            String groupId = null, artifactId = null, version = null;
+            String parentGroupId = null, parentArtifactId = null, parentVersion = null;
 
             for (var i = 0; i < project.getChildNodes().getLength(); i++) {
                 var node = project.getChildNodes().item(i);
@@ -99,8 +115,20 @@ public final class DependencyDownloadWorker implements Runnable {
                 }
             }
 
-            var context = hasParent ? pomContextRegistry.registerFromParent(parentGroupId, parentArtifactId, parentVersion, groupId, artifactId, version)
-                    : pomContextRegistry.register(groupId, artifactId, version);
+            groupId = Objects.requireNonNullElse(groupId, parentGroupId);
+            version = Objects.requireNonNullElse(version, parentVersion);
+
+            if (hasParent && !pomContextRegistry.hasContext(pomContextRegistry.contextIdFor(parentGroupId, parentArtifactId, parentVersion))) {
+                return new TransitiveDependencies(Optional.of(new MavenDependency(parentGroupId, parentArtifactId, parentVersion, "pom", MavenDependency.Scope.COMPILE, "", Optional.empty())), Collections.emptyList());
+            }
+
+            String context;
+            if (hasParent) {
+                parentDependency = new MavenDependency(parentGroupId, parentArtifactId, parentVersion, "pom", MavenDependency.Scope.COMPILE, "", Optional.empty());
+                context = pomContextRegistry.registerFromParent(parentGroupId, parentArtifactId, parentVersion, groupId, artifactId, version);
+            } else {
+                context = pomContextRegistry.register(groupId, artifactId, version);
+            }
 
             if (propertiesElement != null) {
                 for (var i = 0; i < propertiesElement.getChildNodes().getLength(); i++) {
@@ -112,7 +140,7 @@ public final class DependencyDownloadWorker implements Runnable {
             }
 
             if (dependenciesElement == null) {
-                return Collections.emptyList();
+                return new TransitiveDependencies(Optional.ofNullable(parentDependency), Collections.emptyList());
             }
 
             List<MavenDependency> dependencies = new ArrayList<>(dependenciesElement.getChildNodes().getLength());
@@ -150,18 +178,17 @@ public final class DependencyDownloadWorker implements Runnable {
                 );
             }
 
-            return dependencies;
+            return new TransitiveDependencies(Optional.ofNullable(parentDependency), dependencies);
         } catch (FileNotFoundException e) {
-            return Collections.emptyList();
+            return new TransitiveDependencies(Optional.empty(), Collections.emptyList());
         } catch (Throwable e) {
             Log.getInstance().error("Could not download dependency %s:%s:%s POM file from %s.", e, mavenDependency.groupId(), mavenDependency.artifactId(), mavenDependency.version(), pomDownloadUrl(mavenDependency));
-            return Collections.emptyList();
+            return new TransitiveDependencies(Optional.empty(), Collections.emptyList());
         }
     }
 
     private void downloadJar(MavenDependency dependency) {
         try {
-
             var whereToDownload = downloadManager.downloadPathOfDependency(dependency);
             var folder = whereToDownload.getParent();
             Files.createDirectories(folder);
@@ -177,7 +204,7 @@ public final class DependencyDownloadWorker implements Runnable {
             );
             var downloadDuration = Timing.getInstance().end(dependency.toString());
 
-            Log.getInstance().info("Downloading %s:%s:%s:%s for %s in %s.", dependency.groupId(), dependency.artifactId(), dependency.version(), dependency.qualifier(), dependency.scope().reason(), downloadDuration);
+            Log.getInstance().info("Downloaded %s:%s:%s:%s for %s in %s.", dependency.groupId(), dependency.artifactId(), dependency.version(), dependency.qualifier(), dependency.scope().reason(), downloadDuration);
 
         } catch (Throwable e) {
             throw new RuntimeException(e);
