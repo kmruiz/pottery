@@ -34,7 +34,7 @@ artifact:
 
 ## Why pottery?
 
-Build system complexity is real and spend resources and frustrates teams.  Other full-fledged build systems like [Maven](https://maven.apache.org/) 
+Build system complexity is real and spends resources and frustrates teams.  Other full-fledged build systems like [Maven](https://maven.apache.org/) 
 and [Gradle](https://gradle.org/) are wonderful, but adapting them to each team conventions is time-consuming.
 
 Not all projects require complex setups and plugins. Lightweight configurations based on conventions are effective for on-boarding new teams
