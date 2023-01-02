@@ -55,7 +55,7 @@ public class TestCommand implements CliCommand {
         var deps = dependencyResolver.downloadDependenciesOfArtifact(artifactDoc.document());
         var compiler = new IncrementalCompiler(Toolchain.systemDefault());
         var targetClassesPath = Path.of("target", "classes");
-        var targetTestClassesPath = Path.of("target", "test-classes-x");
+        var targetTestClassesPath = Path.of("target", "test-classes");
 
         var process = compiler.compileTree(artifactDoc.document(), Path.of("src", "main", "java").toAbsolutePath(), targetClassesPath.toAbsolutePath(), deps);
 

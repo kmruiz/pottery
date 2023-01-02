@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Placeholder for IDEA">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Fix running tests">
       <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -200,7 +199,7 @@
       <workItem from="1666029636006" duration="2000" />
       <workItem from="1666110676659" duration="1953000" />
       <workItem from="1672599590823" duration="14924000" />
-      <workItem from="1672686422379" duration="11179000" />
+      <workItem from="1672686422379" duration="11219000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -391,7 +390,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672697428513</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Fix running tests">
+      <created>1672697631449</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1672697631449</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -428,7 +434,8 @@
     <MESSAGE value="Do not require the graalvm" />
     <MESSAGE value="Fix download path" />
     <MESSAGE value="Placeholder for IDEA" />
-    <option name="LAST_COMMIT_MESSAGE" value="Placeholder for IDEA" />
+    <MESSAGE value="Fix running tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix running tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -450,7 +457,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/cat/pottery/ui/cli/command/TestCommand.java</url>
-          <line>158</line>
+          <line>157</line>
           <option name="timeStamp" value="95" />
         </line-breakpoint>
       </breakpoints>
