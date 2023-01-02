@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment=".gitignore updated">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cat/pottery/engine/toolchain/Toolchain.java" afterDir="false" />
+    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Do not require the graalvm">
+      <change beforePath="$PROJECT_DIR$/src/main/sh/pottery.sh" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/sh/pottery.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +60,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.cat.json - Package">
+  <component name="RunManager" selected="Application.pottery - Package">
     <configuration name="Package" type="Application" factoryName="Application">
       <envs>
         <env name="GRAALVM_HOME" value="/usr/share/graalvm/graalvm-ce-java17-22.2.0" />
@@ -130,7 +129,7 @@
       </envs>
       <option name="MAIN_CLASS_NAME" value="cat.pottery.ui.cli.Bootstrap" />
       <module name="pottery" />
-      <option name="PROGRAM_PARAMETERS" value="test" />
+      <option name="PROGRAM_PARAMETERS" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -194,7 +193,7 @@
       <workItem from="1666029636006" duration="2000" />
       <workItem from="1666110676659" duration="1953000" />
       <workItem from="1672599590823" duration="14924000" />
-      <workItem from="1672686422379" duration="9576000" />
+      <workItem from="1672686422379" duration="9680000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -350,7 +349,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672695876638</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Do not require the graalvm">
+      <created>1672696010293</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1672696010293</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -384,7 +390,8 @@
     <MESSAGE value="Try releasing" />
     <MESSAGE value="Release 0.0.2?" />
     <MESSAGE value=".gitignore updated" />
-    <option name="LAST_COMMIT_MESSAGE" value=".gitignore updated" />
+    <MESSAGE value="Do not require the graalvm" />
+    <option name="LAST_COMMIT_MESSAGE" value="Do not require the graalvm" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
