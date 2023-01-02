@@ -45,6 +45,6 @@ Pottery aims to lower the complexity of managing a Java project by building on t
 
 * Simplicity over completeness
 * Aim for most of the projects, not all of them.
-* Performance is one of the main levers of a team Developer Experience.
+* Performance is one of the main levers of a team's Developer Experience.
 * Integrate with modern development practices as smooth as possible.
 * Easy to use on CI, no complex configurations.
