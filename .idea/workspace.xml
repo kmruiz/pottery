@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment="Release 0.0.2?">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="c47d9c16-7ecc-4c57-9f2b-ac4a917156a1" name="Changes" comment=".gitignore updated">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/release.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/release.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,7 +194,7 @@
       <workItem from="1666029636006" duration="2000" />
       <workItem from="1666110676659" duration="1953000" />
       <workItem from="1672599590823" duration="14924000" />
-      <workItem from="1672686422379" duration="9341000" />
+      <workItem from="1672686422379" duration="9446000" />
     </task>
     <task id="LOCAL-00001" summary="Parse simple yaml">
       <created>1665867366001</created>
@@ -335,7 +336,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672695753551</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary=".gitignore updated">
+      <created>1672695770836</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1672695770836</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -368,7 +376,8 @@
     <MESSAGE value="Typo" />
     <MESSAGE value="Try releasing" />
     <MESSAGE value="Release 0.0.2?" />
-    <option name="LAST_COMMIT_MESSAGE" value="Release 0.0.2?" />
+    <MESSAGE value=".gitignore updated" />
+    <option name="LAST_COMMIT_MESSAGE" value=".gitignore updated" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

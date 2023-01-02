@@ -6,7 +6,7 @@ on:
 
 jobs:
   releases:
-    name: Build fatJar using maven
+    name: Build fatJar using pottery
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,7 +17,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Pottery build fatJar
-        environment:
+        env:
           POTTERY_VERSION: 0.0.1
         run: ./src/main/sh/pottery.sh package
       - name: Upload Jar Artifact
