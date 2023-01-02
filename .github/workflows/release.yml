@@ -1,0 +1,45 @@
+name: Release new fatJar
+
+on:
+  push:
+    tags:
+      - *
+
+jobs:
+  releases:
+    name: Build fatJar using maven
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Java Environment
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Maven build package
+        run: mvn --batch-mode --update-snapshots -Dmaven.test.skip=true package
+      - name: Upload Jar Artifact
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: target/pottery-${{ github.event.release.tag_name }}-fat.jar application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate md5 checksum
+        run: md5sum < target/pottery-${{ github.event.release.tag_name }}-fat.jar | awk '{print $1}' > target/pottery-${{ github.event.release.tag_name }}-fat.jar.md5
+
+      - name: Upload md5 checksum
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: target/pottery-${{ github.event.release.tag_name }}-fat.jar.md5 text/plain
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload pottery.sh
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: src/main/sh/pottery.sh text/plain
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
