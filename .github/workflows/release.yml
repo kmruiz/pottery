@@ -1,9 +1,8 @@
 name: Release new fatJar
 
 on:
-  push:
-    tags:
-      - *
+  release:
+    types: [published]
 
 jobs:
   releases:
