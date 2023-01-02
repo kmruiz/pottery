@@ -26,7 +26,7 @@ public final class Toolchain {
             throw new Error();
         }
 
-        return new Toolchain(Path.of(javaHome), Path.of(graalvmHome), containerBuilder == null ? null : Path.of(containerBuilder));
+        return new Toolchain(Path.of(javaHome), graalvmHome == null ? null : Path.of(graalvmHome), containerBuilder == null ? null : Path.of(containerBuilder));
     }
 
     public Path javac() {
