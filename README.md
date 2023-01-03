@@ -58,19 +58,19 @@ Pottery aims to lower the complexity of managing a Java project by building on t
 Download the latest version of the pottery wrapper with curl and add execution rights.
 
 ```shell
-$> curl -s -L https://github.com/kmruiz/pottery/releases/latest/download/pottery.sh > pottery.sh && chmod +x pottery.sh
+curl -s -L https://github.com/kmruiz/pottery/releases/latest/download/pottery.sh > pottery.sh && chmod +x pottery.sh
 ```
 
 And initialise a project for the JDK 18.
 
 ```shell
-$> ./pottery.sh init example-project group id 1.0.0 -j 18 -p fatjar
-$> cp pottery.sh example-project/
-$> cd example-project
+./pottery.sh init example-project group id 1.0.0 -j 18 -p fatjar
+cp pottery.sh example-project/
+cd example-project
 ```
 
 Now you can package and execute the fat jar.
 ```shell
-$> ./pottery.sh package
-$> java -jar target/id-1.0.0-fat.jar
+./pottery.sh package
+java -jar target/id-1.0.0-fat.jar
 ```
