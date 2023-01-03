@@ -10,12 +10,43 @@ public final class CommandResolver {
             case "package" -> new PackageCommand();
             case "test" -> new TestCommand();
             case "idea" -> new IdeaCommand();
+            case "init" -> new InitCommand();
             default -> new PackageCommand();
         };
     }
 
     private static CommandLine.Model.CommandSpec PACKAGE_SPEC = CommandLine.Model.CommandSpec.create();
     private static CommandLine.Model.CommandSpec IDEA_SPEC = CommandLine.Model.CommandSpec.create();
+    private static CommandLine.Model.CommandSpec INIT_SPEC = CommandLine.Model.CommandSpec.create()
+            .addPositional(CommandLine.Model.PositionalParamSpec.builder()
+                    .index("0")
+                    .type(String.class)
+                    .description("Directory where to initialise the project")
+                    .build())
+            .addPositional(CommandLine.Model.PositionalParamSpec.builder()
+                    .index("1")
+                    .type(String.class)
+                    .description("Group Id of the artifact")
+                    .build())
+            .addPositional(CommandLine.Model.PositionalParamSpec.builder()
+                    .index("2")
+                    .type(String.class)
+                    .description("Artifact Id of the artifact")
+                    .build())
+            .addPositional(CommandLine.Model.PositionalParamSpec.builder()
+                    .index("3")
+                    .type(String.class)
+                    .description("Version of the artifact")
+                    .build())
+            .addOption(CommandLine.Model.OptionSpec.builder("-j", "--jdk")
+                    .type(String.class)
+                    .description("Target JDK for the artifact.")
+                    .build())
+            .addOption(CommandLine.Model.OptionSpec.builder("-p", "--produces")
+                    .type(String.class)
+                    .description("Comma-separated list of artifact types that the project produce. Options: fatjar, library, container, docker, native.")
+                    .build())
+            ;
 
     private static CommandLine.Model.CommandSpec TEST_SPEC = CommandLine.Model.CommandSpec.create()
             .addOption(CommandLine.Model.OptionSpec.builder("-v", "--verbose")
@@ -46,6 +77,7 @@ public final class CommandResolver {
             ).addSubcommand("package", PACKAGE_SPEC)
             .addSubcommand("test", TEST_SPEC)
             .addSubcommand("idea", IDEA_SPEC)
+            .addSubcommand("init", INIT_SPEC)
             .addOption(CommandLine.Model.OptionSpec.builder("--help").usageHelp(true).build())
             .addOption(CommandLine.Model.OptionSpec.builder("--version").versionHelp(true).build());
 }

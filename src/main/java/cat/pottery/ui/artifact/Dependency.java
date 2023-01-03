@@ -22,4 +22,12 @@ public record Dependency(
             }
         };
     }
+
+    public Scope getScope() {
+        return scope;
+    }
+
+    public String getQualifiedName() {
+        return qualifiedName;
+    }
 }

@@ -18,7 +18,7 @@ jobs:
           java-version: '17'
       - name: Pottery build fatJar
         env:
-          POTTERY_VERSION: 0.0.1
+          POTTERY_VERSION: 0.1.0
         run: ./src/main/sh/pottery.sh package
       - name: Upload Jar Artifact
         uses: JasonEtco/upload-to-release@master

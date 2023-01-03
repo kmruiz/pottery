@@ -1,8 +1,5 @@
 package cat.pottery.ui.artifact;
 
-import cat.pottery.ui.artifact.Dependency;
-import cat.pottery.ui.artifact.Platform;
-
 import java.util.List;
 
 public record Artifact(
@@ -13,4 +10,27 @@ public record Artifact(
         List<Dependency> dependencies,
         Manifest manifest
 ) {
+    public String getGroup() {
+        return group;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public Platform getPlatform() {
+        return platform;
+    }
+
+    public List<Dependency> getDependencies() {
+        return dependencies;
+    }
+
+    public Manifest getManifest() {
+        return manifest;
+    }
 }

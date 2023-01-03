@@ -9,7 +9,7 @@ parameters:
 artifact:
   group:    "cat.pottery"
   id:       "pottery"
-  version:  "0.1.0"
+  version:  "0.2.0"
 
   platform:
     version: "17"

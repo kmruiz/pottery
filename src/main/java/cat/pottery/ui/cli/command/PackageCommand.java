@@ -34,7 +34,8 @@ public final class PackageCommand implements CliCommand {
         var pomContextRegistry = new PomContextRegistry(new ConcurrentHashMap<>(32, 1.2f, 4));
 
         var dependencyResolver = new DependencyResolver(manager, queue, 4, pomContextRegistry);
-        var artifactDoc = (ArtifactFileParserResult.Success) new YamlArtifactFileParser().parse(Path.of("pottery.yaml"));
+        ArtifactFileParserResult result = new YamlArtifactFileParser().parse(Path.of("pottery.yaml"));
+        var artifactDoc = (ArtifactFileParserResult.Success) result;
 
         var deps = dependencyResolver.downloadDependenciesOfArtifact(artifactDoc.document());
         var compiler = new IncrementalCompiler(Toolchain.systemDefault());

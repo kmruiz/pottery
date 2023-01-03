@@ -20,4 +20,12 @@ public record ArtifactDocument(
             return new Dependency(dependency.scope(), depQn.get());
         }).toList();
     }
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public Artifact getArtifact() {
+        return artifact;
+    }
 }

@@ -52,3 +52,16 @@ Pottery aims to lower the complexity of managing a Java project by building on t
 * Performance is one of the main levers of a team's Developer Experience.
 * Integrate with modern development practices as smooth as possible.
 * Easy to use on CI, no complex configurations.
+
+## How to start
+
+Download the latest version of the pottery wrapper with curl and add execution rights.
+
+```shell
+$> curl -s -L https://github.com/kmruiz/pottery/releases/latest/download/pottery.sh > pottery.sh && chmod +x pottery.sh
+```
+
+And initialise a project
+```shell
+
+```
