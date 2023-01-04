@@ -1,7 +1,7 @@
 # pottery
 [![Test pottery](https://github.com/kmruiz/pottery/actions/workflows/test.yml/badge.svg)](https://github.com/kmruiz/pottery/actions/workflows/test.yml)
 ![JDK 17](https://img.shields.io/badge/JDK-17-informational)
-[![Release](https://img.shields.io/badge/Release-0.2.0-success)](https://github.com/kmruiz/pottery/releases/tag/0.2.0)
+[![Release](https://img.shields.io/badge/Release-0.3.0-success)](https://github.com/kmruiz/pottery/releases/tag/0.3.0)
 ![Downloads](https://img.shields.io/github/downloads/kmruiz/pottery/total)
 
 A simple build system for Java.
