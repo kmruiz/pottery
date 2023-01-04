@@ -72,7 +72,6 @@ public class YamlArtifactFileParserTest {
         assertEquals("5.9.1", document.parameters().get("junit.version"));
         assertEquals("4.7.0", document.parameters().get("picocli.version"));
 
-        var artifact = document.artifact();
         var dependencies = document.resolvedDependencies();
 
         assertEquals(Dependency.Scope.PRODUCTION, dependencies.get(0).scope());
