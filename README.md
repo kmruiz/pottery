@@ -1,6 +1,6 @@
 # pottery
 [![Test pottery](https://github.com/kmruiz/pottery/actions/workflows/test.yml/badge.svg)](https://github.com/kmruiz/pottery/actions/workflows/test.yml)
-![JDK 17](https://img.shields.io/badge/JDK-17-informational)
+![Requires JDK 17](https://img.shields.io/badge/JDK-17-informational)
 [![Release](https://img.shields.io/badge/Release-0.3.0-success)](https://github.com/kmruiz/pottery/releases/tag/0.3.0)
 ![Downloads](https://img.shields.io/github/downloads/kmruiz/pottery/total)
 
@@ -29,6 +29,8 @@ Pottery aims to lower the complexity of managing a Java project by building on t
 * Easy to use on CI, no complex configurations.
 
 ## How to Start
+
+**Pottery requires at least Java 17 (the latest LTS) to run. You can download the OpenJDK 17 from [Adoptium](https://adoptium.net/).**
 
 Download the latest version of the pottery wrapper with curl and add execution rights.
 
