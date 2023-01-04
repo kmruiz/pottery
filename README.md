@@ -6,35 +6,10 @@
 
 A simple build system for Java.
 
-## tl;dr
+## TL;DR
 
-How does a basic pottery definition look like?
-
-```yaml
-parameters:
-  gson.version: "2.9.1"
-  jackson.version: "2.13.4"
-  jupiter.version: "5.9.1"
-
-artifact:
-  group:    "cat.json"
-  id:       "serde"
-  version:  "0.0.1"
-
-  platform:
-    produces:
-      - "fatjar"
-      - "container"
-    version: "18"
-
-  manifest:
-    main-class: "Main"
-
-  dependencies:
-    - production: "com.google.code.gson:gson:${gson.version}"
-    - production: "com.fasterxml.jackson.core:jackson-databind:${jackson.version}"
-    - test: "org.junit.jupiter:junit-jupiter:${jupiter.version}"
-```
+How does a basic pottery definition look like? Well, this repository is already built and released using pottery! You can
+take a look at a real, working pottery definition [opening the pottery.yml file](./pottery.yaml).
 
 ## Why pottery?
 
@@ -53,7 +28,7 @@ Pottery aims to lower the complexity of managing a Java project by building on t
 * Integrate with modern development practices as smooth as possible.
 * Easy to use on CI, no complex configurations.
 
-## How to start
+## How to Start
 
 Download the latest version of the pottery wrapper with curl and add execution rights.
 
