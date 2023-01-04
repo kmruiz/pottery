@@ -37,8 +37,8 @@ Copy the logs here as a code snippet.
 - JDK: [e.g OpenJDK 18]
 - Pottery Version: [e.g 0.3.0]
 
-**pottery.yml**
-Add a pottery.yml that reproduces the issue if necessary.
+**pottery.yaml**
+Add a pottery.yaml that reproduces the issue if necessary.
 
 **Additional Context**
 Add additional context that you think might be helpful for us.

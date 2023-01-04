@@ -9,7 +9,7 @@ A simple build system for Java.
 ## TL;DR
 
 How does a basic pottery definition look like? Well, this repository is already built and released using pottery! You can
-take a look at a real, working pottery definition [opening the pottery.yml file](./pottery.yaml).
+take a look at a real, working pottery definition [opening the pottery.yaml file](./pottery.yaml).
 
 ## Why pottery?
 

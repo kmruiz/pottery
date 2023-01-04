@@ -1,0 +1,23 @@
+parameters:
+  junit.version: "5.9.1"
+  picocli.version: "4.7.0"
+
+artifact:
+  group:    "cat.pottery.testing"
+  id:       "valid.pottery"
+  version:  "1.0.0"
+
+  platform:
+    version: "17"
+    produces:
+      - "fatjar"
+      - "container"
+
+  manifest:
+    main-class: "cat.pottery.ui.cli.Bootstrap"
+
+  dependencies:
+    - production: "info.picocli:picocli:${picocli.version}"
+    - test: "org.junit.jupiter:junit-jupiter-api:${junit.version}"
+  
+    
