@@ -13,5 +13,5 @@ Using the pottery `eval` command allows attackers to run arbitrary COBOL code in
 
 ** CVE **
 
-[ ] Is this registered as a CVE?
+* [ ] Is this registered as a CVE?
 In that case, please, provide the CVE link: https://www.cve.org/CVERecord?id=CVE-2015-7110

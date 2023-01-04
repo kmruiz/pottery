@@ -25,6 +25,6 @@ Add any other context or screenshots about the feature request here.
 **Follow up**
 _Please mark all that apply_
 
-[ ] I would like to collaborate designing this feature.
-[ ] I would like to collaborate building this feature.
-[ ] I would like to collaborate testing this feature.
+* [ ] I would like to collaborate designing this feature.
+* [ ] I would like to collaborate building this feature.
+* [ ] I would like to collaborate testing this feature.
