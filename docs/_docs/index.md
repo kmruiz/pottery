@@ -1,50 +1,51 @@
 ---
-title: Welcome
+title: Getting Started
 permalink: /docs/home/
 redirect_from: /docs/index.html
 ---
 
 ## Getting started
 
-[GitHub Pages](https://pages.github.com) can automatically generate and serve the website for you.
-Let's say you have a username/organisation `my-org` and project `my-proj`; if you locate Jekyll source under `docs` folder of master branch in your repo `github.com/my-org/my-proj`, the website will be served on `my-org.github.io/my-proj`.
-The good thing about coupling your documentation with the source repo is, whenever you merge features with regarding content to master branch, it will also be published on the webpage instantly.
+**Pottery requires at least Java 17 (the latest LTS) to run. You can download the OpenJDK 17 from [Adoptium](https://adoptium.net/).**
 
-1. Just [download the source](https://github.com/aksakalli/jekyll-doc-theme/archive/gh-pages.zip) into your repo under `docs` folder.
-2. Edit site settings in  `_config.yml` file according to your project. !!! `baseurl` should be your website's relative URI like `/my-proj` !!!
-3. Replace `favicon.ico` and `assets/img/logonav.png` with your own logo.
+Pottery is split in two different artifacts. Usually, you will work only with the pottery wrapper (pottery.sh). The pottery wrapper
+will download the necessary pottery version to run your project automatically and will be your entrypoint to issuing pottery
+commands.
 
-## Writing content
+To download the wrapper, you can just run this command in your preferred shell:
 
-### Docs
-
-Docs are [collections](https://jekyllrb.com/docs/collections/) of pages stored under `_docs` folder. To create a new page:
-
-**1.** Create a new Markdown as `_docs/my-page.md` and write [front matter](https://jekyllrb.com/docs/frontmatter/) & content such as:
-
-```
----
-title: My Page
-permalink: /docs/my-page/
----
-
-Hello World!
+```shell
+curl -s -L https://github.com/kmruiz/pottery/releases/latest/download/pottery.sh > pottery.sh && chmod +x pottery.sh
 ```
 
-**2.** Add the pagename to `_data/docs.yml` file in order to list in docs navigation panel:
+You can store the pottery wrapper anywhere. However, as it is a small shell script, it is convenient to store it within the source code.
 
+To create a new project with pottery, use the pottery.sh wrapper init command, that will create a folder for your project, the pottery.yml
+definition file and a sample Java source file.
+
+```shell
+./pottery.sh init example-project group id 1.0.0 -j 17 -p fatjar
 ```
-- title: My Group Title
-  docs:
-  - my-page
+
+* _example-project_ is the folder where the project is going to be created. If it doesn't exist, it will be created.
+* _group_ Group Id of the maven artifact.
+* _id_ Artifact Id of the maven artifact.
+* _1.0.0_ Initial version of the maven artifact.
+* _-j 17_ Target JDK version. Defaults to 17.
+* _-p fatjar_ Artifact type to be produced. It will produce a fatjar artifact with the necessary dependencies to be run.
+
+Created the project, now we can `cd` into it and package it.
+
+```shell
+cp pottery.sh example-project/ # bring the pottery.sh along so it can be committed
+cd example-project
 ```
 
-### Blog posts
+Package the project and run it.
 
-Add a new Markdown file such as `2017-05-09-my-post.md` and write the content similar to other post examples.
+```shell
+./pottery.sh package
+java -jar target/id-1.0.0-fat.jar
+```
 
-### Pages
-
-The homepage is located under `index.html` file. You can change the content or design completely different welcome page for your taste. (You can use [bootstrap components](http://getbootstrap.com/components/))
-
-In order to add a new page, create a new `.html` or `.md` (markdown) file under root directory and link it in `_includes/topnav.html`.
+Now you are ready to go!
