@@ -23,7 +23,6 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import picocli.CommandLine;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;

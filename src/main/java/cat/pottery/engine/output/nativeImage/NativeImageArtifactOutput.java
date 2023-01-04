@@ -8,7 +8,6 @@ import cat.pottery.telemetry.Log;
 import cat.pottery.telemetry.Timing;
 import cat.pottery.ui.artifact.ArtifactDocument;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;

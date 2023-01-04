@@ -1,8 +1,5 @@
 package cat.pottery.ui.artifact;
 
-import cat.pottery.ui.artifact.Artifact;
-import cat.pottery.ui.artifact.Dependency;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;

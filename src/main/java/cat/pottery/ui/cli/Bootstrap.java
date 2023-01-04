@@ -28,6 +28,12 @@ public final class Bootstrap {
             System.exit(cmdLine.getCommandSpec().exitCodeOnUsageHelp());
         }
 
+        if (parseResult.subcommand().isUsageHelpRequested()) {
+            var innerCmdLine = new CommandLine(parseResult.subcommand().commandSpec());
+            innerCmdLine.usage(innerCmdLine.getOut());
+            System.exit(innerCmdLine.getCommandSpec().exitCodeOnUsageHelp());
+        }
+
         Log.getInstance().info("Running pottery version %s", Toolchain.systemDefault().potteryVersion());
         var clicmd = new CommandResolver().byName(parseResult.subcommand().commandSpec().name());
         clicmd.execute(parseResult.subcommand());

@@ -2,8 +2,6 @@ package cat.pottery.telemetry;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.Duration;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class Timing {
