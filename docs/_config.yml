@@ -7,7 +7,8 @@ lang: en-US
 
 baseurl: "/pottery/" # the subpath of your site, e.g. /blog/
 url: "https://kmruiz.github.io" # the base hostname & protocol for your site
-git_address: "https://github.com/kmruiz/pottery/blob/docs/"
+git_address: "https://github.com/kmruiz/pottery/"
+git_edit_address: "https://github.com/kmruiz/pottery/blob/docs/"
 
 # theme options from https://bootswatch.com/3/
 # comment out this to use default Bootstrap
