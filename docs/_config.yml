@@ -22,8 +22,8 @@ title: Pottery
 email: kevin.mas@hey.com
 description: >- # this means to ignore newlines until "baseurl:"
   Pottery is a build system for Java projects designed to be simple, lightweight and fast.
-baseurl: "/kmruiz/pottery" # the subpath of your site, e.g. /blog
-url: "https://pages.github.com" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/pottery" # the subpath of your site, e.g. /blog
+url: "https://kmruiz.github.io/pottery" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: skmruiz
 github_username:  kmruiz
 
