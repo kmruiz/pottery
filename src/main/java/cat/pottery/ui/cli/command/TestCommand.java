@@ -75,21 +75,20 @@ public class TestCommand implements CliCommand {
         process = compiler.compileTree(artifactDoc.document(), Path.of("src", "test", "java").toAbsolutePath(), targetTestClassesPath.toAbsolutePath(), deps);
 
         if (process == null) {
-            Log.getInstance().error("Could not run javac process.");
-            return;
-        }
+            Log.getInstance().info("Nothing to compile.");
+        } else {
+            try {
+                process.waitFor();
+            } catch (InterruptedException e) {
 
-        try {
-            process.waitFor();
-        } catch (InterruptedException e) {
+            }
 
-        }
-
-        if (process.exitValue() != 0) {
-            Log.getInstance().error("Java compilation error.");
-            Log.getInstance().error(consumeStream(process.getErrorStream()));
-            Log.getInstance().error(consumeStream(process.getInputStream()));
-            return;
+            if (process.exitValue() != 0) {
+                Log.getInstance().error("Java compilation error.");
+                Log.getInstance().error(consumeStream(process.getErrorStream()));
+                Log.getInstance().error(consumeStream(process.getInputStream()));
+                return;
+            }
         }
 
         URLClassLoader cl = null;

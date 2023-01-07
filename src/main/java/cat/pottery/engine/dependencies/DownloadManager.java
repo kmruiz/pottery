@@ -8,6 +8,7 @@ package cat.pottery.engine.dependencies;
 
 import cat.pottery.engine.dependencies.maven.DownloadedDependency;
 import cat.pottery.engine.dependencies.maven.MavenDependency;
+import cat.pottery.engine.integrations.IDEAImlGenerator;
 import cat.pottery.telemetry.Log;
 
 import java.nio.file.Path;
@@ -76,12 +77,15 @@ public final class DownloadManager {
                 }
             }
 
-            return foundVersionsPerArtifact.values()
+            var allDependencies = foundVersionsPerArtifact.values()
                     .stream()
                     .map(deps -> deps.stream().reduce(MavenDependency::max))
                     .map(Optional::get)
                     .map(dep -> new DownloadedDependency(dep, downloadPathOfDependency(dep)))
                     .toList();
+
+            IDEAImlGenerator.getInstance().generateImlFileIfNecessary(allDependencies);
+            return allDependencies;
         });
     }
 
