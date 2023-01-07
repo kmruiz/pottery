@@ -15,5 +15,5 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Pottery run test suite
-        run: ./src/main/sh/pottery.sh test
+        run: ./src/main/sh/pottery.sh test -x
 

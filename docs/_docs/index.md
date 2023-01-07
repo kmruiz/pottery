@@ -1,10 +1,8 @@
 ---
-title: Getting Started
+title: Your First Project
 permalink: /docs/home/
 redirect_from: /docs/index.html
 ---
-
-## Getting started
 
 **Pottery requires at least Java 17 (the latest LTS) to run. You can download the OpenJDK 17 from [Adoptium](https://adoptium.net/).**
 
