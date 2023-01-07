@@ -28,7 +28,7 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import picocli.CommandLine;
 
-import java.io.File;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
@@ -73,12 +73,23 @@ public class TestCommand implements CliCommand {
         }
 
         process = compiler.compileTree(artifactDoc.document(), Path.of("src", "test", "java").toAbsolutePath(), targetTestClassesPath.toAbsolutePath(), deps);
-        if (process != null) {
-            try {
-                process.waitFor();
-            } catch (InterruptedException e) {
 
-            }
+        if (process == null) {
+            Log.getInstance().error("Could not run javac process.");
+            return;
+        }
+
+        try {
+            process.waitFor();
+        } catch (InterruptedException e) {
+
+        }
+
+        if (process.exitValue() != 0) {
+            Log.getInstance().error("Java compilation error.");
+            Log.getInstance().error(consumeStream(process.getErrorStream()));
+            Log.getInstance().error(consumeStream(process.getInputStream()));
+            return;
         }
 
         URLClassLoader cl = null;
@@ -171,5 +182,14 @@ public class TestCommand implements CliCommand {
                 .map(DiscoverySelectors::selectPackage)
                 .toList();
 
+    }
+
+    private String consumeStream(InputStream is) {
+        try {
+            return new String(is.readAllBytes());
+        } catch (IOException e) {
+            Log.getInstance().error("Could not read output from process.", e);
+            throw new RuntimeException(e);
+        }
     }
 }

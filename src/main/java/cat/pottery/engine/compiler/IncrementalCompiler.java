@@ -31,6 +31,8 @@ public final class IncrementalCompiler {
 
     public Process compileTree(ArtifactDocument artifactDocument, Path sourceCode, Path targetDirectory, List<DownloadedDependency> dependencies) {
         var classpath = dependencies.stream().map(e -> e.downloadPath().toString()).collect(Collectors.joining(":")) + ":" + targetDirectory.toString();
+        classpath += ":target/classes/";
+
         var filesToCompile = new LinkedList<CompilationUnit>();
 
         try {
