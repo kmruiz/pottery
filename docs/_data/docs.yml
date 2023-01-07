@@ -2,10 +2,9 @@
   docs:
   - home
   - running-tests
-  - customization
+  - packaging
 
-- title: Examples
+- title: Contributing
   docs:
-  - cheatsheet
-  - font-awesome
-  - bootstrap
+  - development-environment
+  - creating-pull-requests

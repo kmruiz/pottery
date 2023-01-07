@@ -51,3 +51,5 @@ Now you can package and execute the fat jar.
 ./pottery.sh package
 java -jar target/id-1.0.0-fat.jar
 ```
+
+You can read the documentation in our [web page](https://kmruiz.github.io/pottery/docs/home/).

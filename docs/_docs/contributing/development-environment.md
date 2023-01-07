@@ -1,6 +1,6 @@
 ---
-title: Bootstrap Features
-permalink: /docs/bootstrap/
+title: Development Environment
+permalink: /docs/contributing/development-environment/
 ---
 
 
