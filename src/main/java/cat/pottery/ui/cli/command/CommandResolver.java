@@ -29,7 +29,7 @@ public final class CommandResolver {
             .addOption(CommandLine.Model.OptionSpec.builder("--help").usageHelp(true).build());
     private static CommandLine.Model.CommandSpec IDEA_SPEC = CommandLine.Model.CommandSpec.create()
             .usageMessage(new CommandLine.Model.UsageMessageSpec()
-                    .description("Edits IDEA workspace files so the IDE detect dependencies downloaded by pottery."))
+                    .description("Activates the IDEA integration to maintain the classpath and configuration of the IDE."))
             .addOption(CommandLine.Model.OptionSpec.builder("--help").usageHelp(true).build());
     private static CommandLine.Model.CommandSpec CLEAN_SPEC = CommandLine.Model.CommandSpec.create()
             .usageMessage(new CommandLine.Model.UsageMessageSpec()
