@@ -5,7 +5,7 @@ description: >
   Pottery is a simple, lightweight build system for Java.
 lang: en-US
 
-baseurl: "/pottery/" # the subpath of your site, e.g. /blog/
+baseurl: "/pottery" # the subpath of your site, e.g. /blog/
 url: "https://kmruiz.github.io" # the base hostname & protocol for your site
 git_address: "https://github.com/kmruiz/pottery/"
 git_edit_address: "https://github.com/kmruiz/pottery/edit/main/docs/"
