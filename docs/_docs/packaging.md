@@ -79,8 +79,9 @@ artifact:
 ## fatJar Artifact
 
 Generating an executable fatJar is like building a library, as it only requires a JDK, that you already
-have to run Pottery itself. To build a fatJar artifact, specify the `fatjar` output in the
-`produces` section. For example:
+have to run Pottery itself. Fat Jars specify a `main class`, which is the class to be executed when the fat jar is run
+by the JDK. To build a fatJar artifact, specify the `fatjar` output in the `produces` section and a `main-class` specification
+in the manifest section. For example:
 
 ```yaml
 artifact:
@@ -91,6 +92,8 @@ artifact:
   platform:
     version: "17"
     produces: "fatjar"
+  manifest:
+    main-class: "cat.pottery.ui.cli.Bootstrap"
 ```
 
 ## container/docker Artifact
@@ -115,6 +118,8 @@ artifact:
   platform:
     version: "17"
     produces: "container"
+  manifest:
+    main-class: "cat.pottery.ui.cli.Bootstrap"
 ```
 
 Now, run the pottery command with the CONTAINER_BUILDER environment variable,
@@ -153,6 +158,8 @@ artifact:
   platform:
     version: "17"
     produces: "native"
+  manifest:
+    main-class: "cat.pottery.ui.cli.Bootstrap"
 ```
 
 To provide to Pottery which GraalVM version to use, you need to provide the GRAALVM_HOME
