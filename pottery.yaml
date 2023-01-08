@@ -26,5 +26,3 @@ artifact:
     - production: "org.junit.platform:junit-platform-launcher:${junit.platform.version}"
     - production: "org.junit.jupiter:junit-jupiter-engine:${junit.engine.version}"
     - test: "org.junit.jupiter:junit-jupiter-api:${junit.version}"
-  
-    

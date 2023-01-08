@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd docs && bundle exec jekyll serve --incremental
+cd docs && bundle exec jekyll serve
