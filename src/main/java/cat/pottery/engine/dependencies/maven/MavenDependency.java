@@ -21,6 +21,18 @@ public record MavenDependency(
 ) {
     private static final Pattern VERSION_PATTERN = Pattern.compile("(?<major>\\d+)\\.(?<minor>\\d+)(\\.(?<patch>\\d+))?");
 
+    public String qualifiedName() {
+        return "%s:%s".formatted(groupId, artifactId);
+    }
+
+    public MavenDependency withVersionIfUnspecified(String version) {
+        if (version != null && (this.version == null || this.version.isBlank())) {
+            return new MavenDependency(groupId, artifactId, version, type, scope, qualifier, classifier);
+        }
+
+        return this;
+    }
+
     public boolean isSnapshot() {
         return version.endsWith("-SNAPSHOT");
     }
@@ -77,6 +89,11 @@ public record MavenDependency(
 
         return dependency;
     }
+
+    public boolean isNotVersioned() {
+        return version == null || version.isBlank();
+    }
+
     public enum Scope {
         COMPILE("packaging"), RUNTIME("packaging"), TEST("tesing");
 

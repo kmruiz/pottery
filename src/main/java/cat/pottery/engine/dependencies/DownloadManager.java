@@ -20,13 +20,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class DownloadManager {
     private final Queue<MavenDependency> dependenciesToDownload;
     private final Map<String, Set<MavenDependency>> foundVersionsPerArtifact;
+    private final Map<String, String> defaultVersionsSpecified;
     private final int expectFinishingCount;
     private final AtomicInteger finishCount;
     private final boolean downloadTestDependencies;
 
-    public DownloadManager(Queue<MavenDependency> dependenciesToDownload, Map<String, Set<MavenDependency>> foundVersionsPerArtifact, int expectFinishingCount, boolean downloadTestDependencies) {
+    public DownloadManager(Queue<MavenDependency> dependenciesToDownload, Map<String, Set<MavenDependency>> foundVersionsPerArtifact, Map<String, String> defaultVersionsSpecified, int expectFinishingCount, boolean downloadTestDependencies) {
         this.dependenciesToDownload = dependenciesToDownload;
         this.foundVersionsPerArtifact = foundVersionsPerArtifact;
+        this.defaultVersionsSpecified = defaultVersionsSpecified;
         this.expectFinishingCount = expectFinishingCount;
         this.finishCount = new AtomicInteger(0);
         this.downloadTestDependencies = downloadTestDependencies;
@@ -49,7 +51,7 @@ public final class DownloadManager {
     }
 
     private void markDependencyToDownload(MavenDependency dependency) {
-        var qname = "%s:%s".formatted(dependency.groupId(), dependency.artifactId());
+        var qname = dependency.qualifiedName();
         var versionsOfDep = foundVersionsPerArtifact.getOrDefault(qname, new HashSet<>());
 
         if (versionsOfDep.stream().noneMatch(e -> e.version().equals(dependency.version()))) {
@@ -58,8 +60,12 @@ public final class DownloadManager {
                 Log.getInstance().warn("Using multiple versions of %s:%s", dependency.groupId(), dependency.artifactId());
             }
 
-            dependenciesToDownload.offer(dependency);
-            versionsOfDep.add(dependency);
+            var toDownload = dependency.withVersionIfUnspecified(defaultVersionsSpecified.get(qname));
+            if (toDownload.isNotVersioned()) {
+                return;
+            }
+            dependenciesToDownload.offer(toDownload);
+            versionsOfDep.add(toDownload);
             foundVersionsPerArtifact.put(qname, versionsOfDep);
         }
     }
@@ -98,5 +104,9 @@ public final class DownloadManager {
                 dependency.version(),
                 "%s-%s%s.%s".formatted(dependency.artifactId(), dependency.version(), dependency.classifier().map(e -> "-" + e).orElse(""), dependency.qualifier())
         );
+    }
+
+    public void addVersionSuggestion(String qualifiedName, String version) {
+        defaultVersionsSpecified.put(qualifiedName, version);
     }
 }

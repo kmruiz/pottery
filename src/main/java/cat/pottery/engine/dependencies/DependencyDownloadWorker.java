@@ -9,6 +9,8 @@ package cat.pottery.engine.dependencies;
 import cat.pottery.engine.dependencies.maven.MavenDependency;
 import cat.pottery.telemetry.Log;
 import cat.pottery.telemetry.Timing;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -21,6 +23,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static org.w3c.dom.Node.ELEMENT_NODE;
 
@@ -51,9 +54,8 @@ public final class DependencyDownloadWorker implements Runnable {
 
     @Override
     public void run() {
-        MavenDependency toDownload = null;
         do {
-            toDownload = dependenciesToDownload.poll();
+            var toDownload = dependenciesToDownload.poll();
             if (toDownload == null || toDownload.version() == null) {
                 break;
             }
@@ -88,45 +90,53 @@ public final class DependencyDownloadWorker implements Runnable {
 
             Node dependenciesElement = null;
             Node propertiesElement = null;
+            Node dependencyManagementDependencies = null;
+
             MavenDependency parentDependency = null;
 
             boolean hasParent = false;
             String groupId = null, artifactId = null, version = null;
             String parentGroupId = null, parentArtifactId = null, parentVersion = null;
 
-            for (var i = 0; i < project.getChildNodes().getLength(); i++) {
-                var node = project.getChildNodes().item(i);
-                if (node.getNodeName().equals("dependencies")) {
-                    dependenciesElement = node;
-                } else if (node.getNodeName().equals("properties")) {
-                    propertiesElement = node;
-                } else if (node.getNodeName().equals("groupId")) {
-                    groupId = node.getTextContent();
-                } else if (node.getNodeName().equals("artifactId")) {
-                    artifactId = node.getTextContent();
-                } else if (node.getNodeName().equals("version")) {
-                    version = node.getTextContent();
-                } else if (node.getNodeName().equals("parent")) {
-                    hasParent = true;
-                    for (var j = 0; j < node.getChildNodes().getLength(); j++) {
-                        var parentNode = node.getChildNodes().item(j);
-                        if (parentNode.getNodeName().equals("groupId")) {
-                            parentGroupId = parentNode.getTextContent();
-                        } else if (parentNode.getNodeName().equals("artifactId")) {
-                            parentArtifactId = parentNode.getTextContent();
-                        } else if (parentNode.getNodeName().equals("version")) {
-                            parentVersion = parentNode.getTextContent();
+            var node = project.getFirstChild();
+            while (node != null) {
+                switch (node.getNodeName()) {
+                    case "dependencies" -> dependenciesElement = node;
+                    case "properties" -> propertiesElement = node;
+                    case "groupId" -> groupId = node.getTextContent();
+                    case "artifactId" -> artifactId = node.getTextContent();
+                    case "version" -> version = node.getTextContent();
+                    case "parent" -> {
+                        hasParent = true;
+                        var parentNode = ((Element) node.getChildNodes()).getFirstChild();
+                        while (parentNode != null) {
+                            switch (parentNode.getNodeName()) {
+                                case "groupId" -> parentGroupId = parentNode.getTextContent();
+                                case "artifactId" -> parentArtifactId = parentNode.getTextContent();
+                                case "version" -> parentVersion = parentNode.getTextContent();
+                            }
+
+                            parentNode = parentNode.getNextSibling();
+                        }
+                    }
+                    case "dependencyManagement" -> {
+                        var dmNode = node.getFirstChild();
+                        while (dmNode != null) {
+                            if (dmNode.getNodeName().equals("dependencies")) {
+                                dependencyManagementDependencies = dmNode;
+                                break;
+                            }
+
+                            dmNode = dmNode.getNextSibling();
                         }
                     }
                 }
+
+                node = node.getNextSibling();
             }
 
             groupId = Objects.requireNonNullElse(groupId, parentGroupId);
             version = Objects.requireNonNullElse(version, parentVersion);
-
-            if (hasParent && !pomContextRegistry.hasContext(pomContextRegistry.contextIdFor(parentGroupId, parentArtifactId, parentVersion))) {
-                return new TransitiveDependencies(Optional.of(new MavenDependency(parentGroupId, parentArtifactId, parentVersion, "pom", MavenDependency.Scope.COMPILE, "", Optional.empty())), Collections.emptyList());
-            }
 
             String context;
             if (hasParent) {
@@ -136,53 +146,34 @@ public final class DependencyDownloadWorker implements Runnable {
                 context = pomContextRegistry.register(groupId, artifactId, version);
             }
 
+            if (hasParent && !pomContextRegistry.hasContext(pomContextRegistry.contextIdFor(parentGroupId, parentArtifactId, parentVersion))) {
+                return new TransitiveDependencies(Optional.of(new MavenDependency(parentGroupId, parentArtifactId, parentVersion, "pom", MavenDependency.Scope.COMPILE, "", Optional.empty())), Collections.emptyList());
+            }
+
             if (propertiesElement != null) {
-                for (var i = 0; i < propertiesElement.getChildNodes().getLength(); i++) {
-                    var property = propertiesElement.getChildNodes().item(i);
+                var property = propertiesElement.getFirstChild();
+                while (property != null) {
                     if (property.getNodeType() == ELEMENT_NODE) {
                         pomContextRegistry.addParameter(context, property.getNodeName(), property.getTextContent());
                     }
+
+                    property = property.getNextSibling();
                 }
+            }
+
+            if (dependencyManagementDependencies != null) {
+                doForEachDependency(dependencyManagementDependencies, context, dependency -> downloadManager.addVersionSuggestion(
+                        dependency.qualifiedName(),
+                        dependency.version()
+                ));
             }
 
             if (dependenciesElement == null) {
                 return new TransitiveDependencies(Optional.ofNullable(parentDependency), Collections.emptyList());
             }
 
-            List<MavenDependency> dependencies = new ArrayList<>(dependenciesElement.getChildNodes().getLength());
-            for (var i = 0; i < dependenciesElement.getChildNodes().getLength(); i++) {
-                var dependency = dependenciesElement.getChildNodes().item(i);
-                if (!dependency.getNodeName().equals("dependency")) {
-                    continue;
-                }
-
-                String depGroupId = null, depArtifactId = null, depVersion = null;
-                MavenDependency.Scope scope = MavenDependency.Scope.RUNTIME;
-                Optional<String> classifier = Optional.empty();
-
-                for (var j = 0; j < dependency.getChildNodes().getLength(); j++) {
-                    var dependencyAttr = dependency.getChildNodes().item(j);
-                    switch (dependencyAttr.getNodeName()) {
-                        case "groupId" -> depGroupId = dependencyAttr.getTextContent();
-                        case "artifactId" -> depArtifactId = dependencyAttr.getTextContent();
-                        case "version" -> depVersion = dependencyAttr.getTextContent();
-                        case "scope" -> scope = MavenDependency.Scope.valueOf(dependencyAttr.getTextContent().trim().toUpperCase());
-                        case "classifier" -> classifier = Optional.of(dependencyAttr.getTextContent());
-                    }
-                }
-
-                dependencies.add(
-                        new MavenDependency(
-                                pomContextRegistry.resolveExpression(context, depGroupId),
-                                pomContextRegistry.resolveExpression(context, depArtifactId),
-                                pomContextRegistry.resolveExpression(context, depVersion),
-                                "jar",
-                                scope,
-                                "jar",
-                                classifier
-                        )
-                );
-            }
+            List<MavenDependency> dependencies = new LinkedList<>();
+            doForEachDependency(dependenciesElement, context, dependencies::add);
 
             return new TransitiveDependencies(Optional.ofNullable(parentDependency), dependencies);
         } catch (FileNotFoundException e) {
@@ -190,6 +181,45 @@ public final class DependencyDownloadWorker implements Runnable {
         } catch (Throwable e) {
             Log.getInstance().error("Could not download dependency %s:%s:%s POM file from %s.", e, mavenDependency.groupId(), mavenDependency.artifactId(), mavenDependency.version(), pomDownloadUrl(mavenDependency));
             return new TransitiveDependencies(Optional.empty(), Collections.emptyList());
+        }
+    }
+
+    private void doForEachDependency(Node dependenciesElement, String context, Consumer<MavenDependency> consumer) {
+        var dependency = dependenciesElement.getFirstChild();
+        while (dependency != null) {
+            if (!dependency.getNodeName().equals("dependency")) {
+                dependency = dependency.getNextSibling();
+                continue;
+            }
+
+            String depGroupId = null, depArtifactId = null, depVersion = null;
+            MavenDependency.Scope scope = MavenDependency.Scope.RUNTIME;
+            Optional<String> classifier = Optional.empty();
+
+            for (var j = 0; j < dependency.getChildNodes().getLength(); j++) {
+                var dependencyAttr = dependency.getChildNodes().item(j);
+                switch (dependencyAttr.getNodeName()) {
+                    case "groupId" -> depGroupId = dependencyAttr.getTextContent();
+                    case "artifactId" -> depArtifactId = dependencyAttr.getTextContent();
+                    case "version" -> depVersion = dependencyAttr.getTextContent();
+                    case "scope" -> scope = MavenDependency.Scope.valueOf(dependencyAttr.getTextContent().trim().toUpperCase());
+                    case "classifier" -> classifier = Optional.of(dependencyAttr.getTextContent());
+                }
+            }
+
+            consumer.accept(
+                    new MavenDependency(
+                            pomContextRegistry.resolveExpression(context, depGroupId),
+                            pomContextRegistry.resolveExpression(context, depArtifactId),
+                            pomContextRegistry.resolveExpression(context, depVersion),
+                            "jar",
+                            scope,
+                            "jar",
+                            classifier
+                    )
+            );
+
+            dependency = dependency.getNextSibling();
         }
     }
 

@@ -36,7 +36,7 @@ public final class PackageCommand implements CliCommand {
         Timing.getInstance().start(TIMING_ID);
 
         var queue = new ArrayBlockingQueue<MavenDependency>(128);
-        var manager = new DownloadManager(queue, new ConcurrentHashMap<>(32, 1.2f, 4), 4, false);
+        var manager = new DownloadManager(queue, new ConcurrentHashMap<>(32, 1.2f, 4), new ConcurrentHashMap<>(32, 1.2f, 4), 4, false);
         var pomContextRegistry = new PomContextRegistry(new ConcurrentHashMap<>(32, 1.2f, 4));
 
         var dependencyResolver = new DependencyResolver(manager, queue, 4, pomContextRegistry);

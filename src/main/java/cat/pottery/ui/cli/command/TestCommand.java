@@ -51,7 +51,7 @@ public class TestCommand implements CliCommand {
     public void execute(CommandLine.ParseResult parseResult) {
         Timing.getInstance().start(TIMING_ID);
         var queue = new ArrayBlockingQueue<MavenDependency>(128);
-        var manager = new DownloadManager(queue, new ConcurrentHashMap<>(32, 1.2f, 4), 4, true);
+        var manager = new DownloadManager(queue, new ConcurrentHashMap<>(32, 1.2f, 4), new ConcurrentHashMap<>(32, 1.2f, 4), 4, true);
         var pomContextRegistry = new PomContextRegistry(new ConcurrentHashMap<>(32, 1.2f, 4));
 
         var dependencyResolver = new DependencyResolver(manager, queue, 4, pomContextRegistry);
