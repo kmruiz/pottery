@@ -58,7 +58,7 @@ public final class DownloadManager {
             if (!versionsOfDep.isEmpty()) {
                 if (versionsOfDep.size() > 1 || !versionsOfDep.stream().toList().get(0).version().equals(dependency.version())) {
                     // warning!
-//                    Log.getInstance().warn("Using multiple versions of %s:%s", dependency.groupId(), dependency.artifactId());
+                    Log.getInstance().warn("Using multiple versions of %s:%s", dependency.groupId(), dependency.artifactId());
                 }
             }
 

@@ -83,6 +83,6 @@ public final class Toolchain {
     }
 
     public String potteryVersion() {
-        return "0.3.2";
+        return "0.3.3";
     }
 }
