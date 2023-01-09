@@ -44,6 +44,12 @@ public class NativeImageArtifactOutput implements ArtifactOutput {
                 "--install-exit-handlers",
                 "--no-fallback",
                 "--enable-https",
+                "-H:IncludeResourceBundles=javax.servlet.LocalStrings",
+                "-H:IncludeResourceBundles=javax.servlet.http.LocalStrings",
+                "-H:IncludeResourceBundles=jakarta.servlet.LocalStrings",
+                "-H:IncludeResourceBundles=jakarta.servlet.http.LocalStrings",
+                "-H:+IncludeAllLocales",
+                "-H:-LocalizationOptimizedMode",
                 outputImage.toString()
         ));
 
