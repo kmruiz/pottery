@@ -6,5 +6,5 @@
 
 - title: Contributing
   docs:
-  - development-environment
-  - creating-pull-requests
+  - contributing/development-environment
+  - contributing/creating-pull-requests
