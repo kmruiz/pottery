@@ -9,7 +9,6 @@ package cat.pottery.engine.dependencies;
 import cat.pottery.engine.dependencies.maven.MavenDependency;
 import cat.pottery.telemetry.Log;
 import cat.pottery.telemetry.Timing;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -17,6 +16,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -55,28 +55,34 @@ public final class DependencyDownloadWorker implements Runnable {
     @Override
     public void run() {
         do {
-            var toDownload = dependenciesToDownload.poll();
-            if (toDownload == null || toDownload.version() == null) {
-                break;
-            }
-
-            // first find transitive dependencies and offer them to download
-            var transitiveDependencies = findTransitiveDependencies(toDownload);
-
-            if (transitiveDependencies.parentDependency.isPresent()) {
-                var parentDependency = transitiveDependencies.parentDependency.get();
-                if (!pomContextRegistry.hasContext(pomContextRegistry.contextIdFor(parentDependency))) {
-                    downloadManager.trackTransitiveDependency(parentDependency);
-                    dependenciesToDownload.offer(toDownload);
-                    continue;
+            try {
+                var toDownload = dependenciesToDownload.poll();
+                if (toDownload == null || toDownload.version() == null) {
+                    safeSleep();
+                    break;
                 }
-            }
 
-            transitiveDependencies.mavenDependencies.forEach(downloadManager::trackTransitiveDependency);
+                // first find transitive dependencies and offer them to download
+                var transitiveDependencies = findTransitiveDependencies(toDownload);
 
-            // now download the jar
-            if (shouldDownload(toDownload)) {
-                downloadJar(toDownload);
+                if (transitiveDependencies.parentDependency.isPresent()) {
+                    var parentDependency = transitiveDependencies.parentDependency.get();
+                    if (!pomContextRegistry.hasContext(pomContextRegistry.contextIdFor(parentDependency))) {
+                        downloadManager.trackTransitiveDependency(parentDependency);
+                        dependenciesToDownload.offer(toDownload);
+                        continue;
+                    }
+                }
+
+                transitiveDependencies.mavenDependencies.forEach(downloadManager::trackTransitiveDependency);
+
+                // now download the jar
+                if (shouldDownload(toDownload)) {
+                    downloadJar(toDownload);
+                }
+            } catch (Throwable e) {
+                Log.getInstance().error("Could not download dependency", e);
+                break;
             }
         } while (true);
 
@@ -138,16 +144,16 @@ public final class DependencyDownloadWorker implements Runnable {
             groupId = Objects.requireNonNullElse(groupId, parentGroupId);
             version = Objects.requireNonNullElse(version, parentVersion);
 
+            if (hasParent && !pomContextRegistry.hasContext(pomContextRegistry.contextIdFor(parentGroupId, parentArtifactId, parentVersion))) {
+                return new TransitiveDependencies(Optional.of(new MavenDependency(parentGroupId, parentArtifactId, parentVersion, "pom", MavenDependency.Scope.COMPILE, "", Optional.empty())), Collections.emptyList());
+            }
+
             String context;
             if (hasParent) {
                 parentDependency = new MavenDependency(parentGroupId, parentArtifactId, parentVersion, "pom", MavenDependency.Scope.COMPILE, "", Optional.empty());
                 context = pomContextRegistry.registerFromParent(parentGroupId, parentArtifactId, parentVersion, groupId, artifactId, version);
             } else {
                 context = pomContextRegistry.register(groupId, artifactId, version);
-            }
-
-            if (hasParent && !pomContextRegistry.hasContext(pomContextRegistry.contextIdFor(parentGroupId, parentArtifactId, parentVersion))) {
-                return new TransitiveDependencies(Optional.of(new MavenDependency(parentGroupId, parentArtifactId, parentVersion, "pom", MavenDependency.Scope.COMPILE, "", Optional.empty())), Collections.emptyList());
             }
 
             if (propertiesElement != null) {
@@ -162,7 +168,8 @@ public final class DependencyDownloadWorker implements Runnable {
             }
 
             if (dependencyManagementDependencies != null) {
-                doForEachDependency(dependencyManagementDependencies, context, dependency -> downloadManager.addVersionSuggestion(
+                doForEachDependency(dependencyManagementDependencies, context, dependency -> pomContextRegistry.addVersionSuggestion(
+                        context,
                         dependency.qualifiedName(),
                         dependency.version()
                 ));
@@ -247,28 +254,68 @@ public final class DependencyDownloadWorker implements Runnable {
         }
     }
 
-    private String pomDownloadUrl(MavenDependency dependency) {
-        return downloadUrlWithQualifier(dependency, "pom");
-    }
-
     private String downloadUrl(MavenDependency dependency) {
-        return downloadUrlWithQualifier(dependency, dependency.qualifier());
-    }
-
-    private String downloadUrlWithQualifier(MavenDependency dependency, String qualifier) {
         return "https://repo1.maven.org/maven2/%s/%s/%s/%s".formatted(
                 dependency.groupId().replaceAll("\\.", "/"),
                 dependency.artifactId(),
                 dependency.version(),
-                "%s-%s%s.%s".formatted(dependency.artifactId(), dependency.version(), dependency.classifier().map(e -> "-" + e).orElse(""), qualifier)
+                "%s-%s%s.%s".formatted(dependency.artifactId(), dependency.version(), dependency.classifier().map(e -> "-" + e).orElse(""), dependency.qualifier())
         );
     }
 
+    private String pomDownloadUrl(MavenDependency dependency) {
+        var pathOfPom = downloadManager.downloadPathOfPOM(dependency);
+        if (pathOfPom.toFile().exists()) {
+            try {
+                return pathOfPom.toUri().toURL().toString();
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            String externalUrlOfPom = "https://repo1.maven.org/maven2/%s/%s/%s/%s".formatted(
+                    dependency.groupId().replaceAll("\\.", "/"),
+                    dependency.artifactId(),
+                    dependency.version(),
+                    "%s-%s%s.pom".formatted(dependency.artifactId(), dependency.version(), dependency.classifier().map(e -> "-" + e).orElse(""))
+            );
+
+            try {
+                var folder = pathOfPom.getParent();
+                Files.createDirectories(folder);
+
+                httpClient.send(
+                        HttpRequest.newBuilder()
+                                .GET()
+                                .uri(
+                                        URI.create(externalUrlOfPom)
+                                ).build(),
+                        HttpResponse.BodyHandlers.ofFile(pathOfPom)
+                );
+
+                return pathOfPom.toUri().toURL().toString();
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private boolean shouldDownload(MavenDependency dependency) {
+        if (dependency.type().equals("pom")) {
+            return false;
+        }
+
         if (dependency.isSnapshot()) {
             return true;
         }
 
         return !downloadManager.downloadPathOfDependency(dependency).toFile().exists();
+    }
+
+    private void safeSleep() {
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

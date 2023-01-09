@@ -8,6 +8,7 @@ package cat.pottery.engine.dependencies;
 
 import cat.pottery.engine.dependencies.maven.DownloadedDependency;
 import cat.pottery.engine.dependencies.maven.MavenDependency;
+import cat.pottery.telemetry.Log;
 import cat.pottery.ui.artifact.ArtifactDocument;
 
 import java.util.List;
@@ -38,6 +39,10 @@ public final class DependencyResolver {
 
         for (var i = 0; i < workerCount; i++) {
             this.workers[i] = new Thread(new DependencyDownloadWorker(downloadManager, queue, pomContextRegistry));
+            this.workers[i].setName("dependency-download-worker-" + i);
+            this.workers[i].setUncaughtExceptionHandler((t, ex) -> {
+                Log.getInstance().error("Uncaught Exception in thread %s.", ex, t.getName());
+            });
             this.workers[i].start();
         }
 
@@ -45,10 +50,21 @@ public final class DependencyResolver {
     }
 
     private List<DownloadedDependency> waitUntilFinishedDownloading() {
+        var downloadedDeps = downloadManager.downloadedDependencies();
+        do {
+            try {
+                return downloadedDeps.get();
+            } catch (Throwable e) {
+                safeSleep();
+            }
+        } while (true);
+    }
+
+    private void safeSleep() {
         try {
-            return downloadManager.downloadedDependencies().get();
-        } catch (InterruptedException | ExecutionException e) {
-            return waitUntilFinishedDownloading();
+            Thread.sleep(5);
+        } catch (InterruptedException e) {
+
         }
     }
 }

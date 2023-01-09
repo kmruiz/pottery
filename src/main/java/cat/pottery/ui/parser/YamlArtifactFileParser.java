@@ -57,6 +57,10 @@ public class YamlArtifactFileParser implements ArtifactFileParser {
         var mainClass = manifest.getOrDefault("main-class", "").toString();
 
         var dependencies = (List<Map<String, String>>) artifact.getOrDefault("dependencies", Collections.emptyList());
+        if (dependencies == null) {
+            dependencies = new ArrayList<>();
+        }
+
         var parsedDependencies = new ArrayList<Dependency>(dependencies.size());
 
         for (var dep : dependencies) {

@@ -8,6 +8,7 @@ package cat.pottery.engine.dependencies;
 
 import cat.pottery.engine.dependencies.maven.MavenDependency;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -18,9 +19,11 @@ public final class PomContextRegistry {
 
     private record Context(String parentContext, ConcurrentHashMap<String, String> parameters) {}
     private final Map<String, Context> contextMap;
+    private final Map<String, String> defaultVersionsSpecified;
 
-    public PomContextRegistry(Map<String, Context> contextMap) {
+    public PomContextRegistry(Map<String, Context> contextMap, Map<String, String> defaultVersionsSpecified) {
         this.contextMap = contextMap;
+        this.defaultVersionsSpecified = defaultVersionsSpecified;
     }
 
     public String contextIdFor(MavenDependency mavenDependency) {
@@ -70,7 +73,7 @@ public final class PomContextRegistry {
         }
 
         var result = expression;
-        while (result.contains("${") && result.contains("}")) {
+        for (var i = 0; i < 3 && result.contains("${") && result.contains("}"); i++) {
             result = resolveExpressionCycle(id, result);
         }
 
@@ -78,24 +81,38 @@ public final class PomContextRegistry {
     }
 
     private String resolveExpressionCycle(String id, String expression) {
-        var ref = new AtomicReference<>(expression);
-
         Context context = contextMap.get(id);
-        context.parameters().forEach((key, value) -> {
-            var toReplace = "${" + key + "}";
-            if (ref.get().contains(toReplace)) {
-                ref.getAndUpdate(x -> x.replace(toReplace, value));
-            }
-        });
+        Map<String, String> allParams = new HashMap<>();
 
-        if (context.parentContext != null) {
-            ref.getAndUpdate(x -> resolveExpressionCycle(context.parentContext, x));
+        allParams.putAll(context.parameters);
+        allParams.putAll(defaultVersionsSpecified);
+
+        for (var entry : allParams.entrySet()) {
+            if (!expression.contains("${")) {
+                return expression;
+            }
+
+            var toReplace = "${" + entry.getKey() + "}";
+            expression = expression.replace(toReplace, entry.getValue());
         }
 
-        return ref.get();
+        if (context.parentContext != null) {
+            return resolveExpressionCycle(context.parentContext, expression);
+        }
+
+        return expression;
+    }
+
+    public void addVersionSuggestion(String context, String qualifiedName, String version) {
+        defaultVersionsSpecified.put(qualifiedName, resolveExpression(context, version));
     }
 
     public boolean hasContext(String id) {
         return contextMap.containsKey(id);
+    }
+
+    public String resolveDefaultVersion(String qualifiedName) {
+        return defaultVersionsSpecified.get(qualifiedName);
+
     }
 }

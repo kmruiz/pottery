@@ -36,8 +36,8 @@ public final class PackageCommand implements CliCommand {
         Timing.getInstance().start(TIMING_ID);
 
         var queue = new ArrayBlockingQueue<MavenDependency>(128);
-        var manager = new DownloadManager(queue, new ConcurrentHashMap<>(32, 1.2f, 4), new ConcurrentHashMap<>(32, 1.2f, 4), 4, false);
-        var pomContextRegistry = new PomContextRegistry(new ConcurrentHashMap<>(32, 1.2f, 4));
+        var pomContextRegistry = new PomContextRegistry(new ConcurrentHashMap<>(32, 1.2f, 4), new ConcurrentHashMap<>(32, 1.2f, 4));
+        var manager = new DownloadManager(queue, new ConcurrentHashMap<>(32, 1.2f, 4), 4, false, pomContextRegistry);
 
         var dependencyResolver = new DependencyResolver(manager, queue, 4, pomContextRegistry);
         ArtifactFileParserResult result = new YamlArtifactFileParser().parse(Path.of("pottery.yaml"));

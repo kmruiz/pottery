@@ -64,11 +64,11 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
 
         ZipOutputStream out = zos;
         Set<String> addedEntries = new HashSet<>();
-        classPath.forEach(dependency -> {
+
+        var onlyJars = classPath.stream().filter(file -> file.downloadPath().getFileName().toString().endsWith(".jar")).toList();
+
+        onlyJars.forEach(dependency -> {
             var pathToJar = dependency.downloadPath();
-            if (!pathToJar.getFileName().toString().endsWith(".jar")) {
-                return;
-            }
 
             try (var zip = new ZipFile(pathToJar.toFile())) {
                 zip.stream().filter(e -> !e.getName().endsWith("META-INF/MANIFEST.MF")).forEach(depEntry -> {
@@ -127,13 +127,11 @@ public final class FatJarArtifactOutput implements ArtifactOutput {
                         Created-By: cat.pottery %s
                         Built-By: %s
                         Build-Jdk: %s
-                        Class-Path: %s
-                        Main-Class: %s 
+                        Main-Class: %s
                         """.formatted(
                         toolchain.potteryVersion(),
                         toolchain.currentUser(),
                         toolchain.javacVersion(),
-                        classPath.stream().map(e -> e.downloadPath().getFileName().toString()).collect(Collectors.joining(" ")),
                         artifactDocument.artifact().manifest().mainClass()
                 ).getBytes());
                 out.closeEntry();

@@ -20,16 +20,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class DownloadManager {
     private final Queue<MavenDependency> dependenciesToDownload;
     private final Map<String, Set<MavenDependency>> foundVersionsPerArtifact;
-    private final Map<String, String> defaultVersionsSpecified;
     private final int expectFinishingCount;
     private final AtomicInteger finishCount;
     private final boolean downloadTestDependencies;
+    private final PomContextRegistry pomContextRegistry;
 
-    public DownloadManager(Queue<MavenDependency> dependenciesToDownload, Map<String, Set<MavenDependency>> foundVersionsPerArtifact, Map<String, String> defaultVersionsSpecified, int expectFinishingCount, boolean downloadTestDependencies) {
+    public DownloadManager(Queue<MavenDependency> dependenciesToDownload, Map<String, Set<MavenDependency>> foundVersionsPerArtifact, int expectFinishingCount, boolean downloadTestDependencies, PomContextRegistry pomContextRegistry) {
         this.dependenciesToDownload = dependenciesToDownload;
         this.foundVersionsPerArtifact = foundVersionsPerArtifact;
-        this.defaultVersionsSpecified = defaultVersionsSpecified;
         this.expectFinishingCount = expectFinishingCount;
+        this.pomContextRegistry = pomContextRegistry;
         this.finishCount = new AtomicInteger(0);
         this.downloadTestDependencies = downloadTestDependencies;
     }
@@ -56,14 +56,18 @@ public final class DownloadManager {
 
         if (versionsOfDep.stream().noneMatch(e -> e.version().equals(dependency.version()))) {
             if (!versionsOfDep.isEmpty()) {
-                // warning!
-                Log.getInstance().warn("Using multiple versions of %s:%s", dependency.groupId(), dependency.artifactId());
+                if (versionsOfDep.size() > 1 || !versionsOfDep.stream().toList().get(0).version().equals(dependency.version())) {
+                    // warning!
+//                    Log.getInstance().warn("Using multiple versions of %s:%s", dependency.groupId(), dependency.artifactId());
+                }
             }
 
-            var toDownload = dependency.withVersionIfUnspecified(defaultVersionsSpecified.get(qname));
+            var defaultVersion = pomContextRegistry.resolveDefaultVersion(qname);
+            var toDownload = dependency.withVersionIfUnspecified(defaultVersion);
             if (toDownload.isNotVersioned()) {
                 return;
             }
+
             dependenciesToDownload.offer(toDownload);
             versionsOfDep.add(toDownload);
             foundVersionsPerArtifact.put(qname, versionsOfDep);
@@ -106,7 +110,14 @@ public final class DownloadManager {
         );
     }
 
-    public void addVersionSuggestion(String qualifiedName, String version) {
-        defaultVersionsSpecified.put(qualifiedName, version);
+    public Path downloadPathOfPOM(MavenDependency dependency) {
+        return Path.of(
+                ".pottery",
+                "m2",
+                dependency.groupId(),
+                dependency.artifactId(),
+                dependency.version(),
+                "%s-%s.pom".formatted(dependency.groupId(), dependency.artifactId(), dependency.version())
+        );
     }
 }

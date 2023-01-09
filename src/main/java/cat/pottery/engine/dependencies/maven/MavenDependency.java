@@ -18,8 +18,8 @@ public record MavenDependency(
         Scope scope,
         String qualifier,
         Optional<String> classifier
-) {
-    private static final Pattern VERSION_PATTERN = Pattern.compile("(?<major>\\d+)\\.(?<minor>\\d+)(\\.(?<patch>\\d+))?");
+) implements Comparable<MavenDependency> {
+    private static final Pattern VERSION_PATTERN = Pattern.compile("(?<major>\\d+)\\.(?<minor>\\d+)(\\.(?<patch>\\d+)).*?");
 
     public String qualifiedName() {
         return "%s:%s".formatted(groupId, artifactId);
@@ -90,12 +90,21 @@ public record MavenDependency(
         return dependency;
     }
 
+    @Override
+    public int compareTo(MavenDependency o) {
+        if (max(o) == this) {
+            return -1;
+        }
+
+        return 1;
+    }
+
     public boolean isNotVersioned() {
         return version == null || version.isBlank();
     }
 
     public enum Scope {
-        COMPILE("packaging"), RUNTIME("packaging"), TEST("tesing");
+        COMPILE("packaging"), RUNTIME("packaging"), PROVIDED("provided"), IMPORT("provided"), TEST("testing");
 
         private final String reason;
 
