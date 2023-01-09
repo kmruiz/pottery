@@ -15,7 +15,7 @@ Pottery is a build system for Java designed to be simple, fast and easy to use.
 
 * **Easy to use**: Just a YAML file, no XMLs, no DSLs, no complex configuration.
 * **Fast**: Parallel downloads and incremental compilation by default.
-* **Lightweight**: The pottery fat-jar is less than 2MB, the pottery wrapper is 1KB.
+* **Lightweight**: The pottery fatJar is less than 2MB, the pottery wrapper is 1KB.
 * **Ready to use**: Can compile to a library, a fatJar, a container or a native image by default.
 
 ## Getting Started
