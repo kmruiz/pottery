@@ -7,7 +7,7 @@ categories: how to
 
 [Javalin is a lightweight and fast Java and Kotlin framework](https://javalin.io/) which is having a big adoption rate due
 to its simplicity and performance. If you are used to work with other frameworks like [ktor](https://ktor.io/) for Kotlin
-and [express.js](https://expressjs.com/), you are not going to be surprised by its API design.
+and [express.js](https://expressjs.com/) for NodeJS, you are not going to be surprised by its API design.
 
 This post summarises how to create a simple HTTP REST API that prints the current date. We will be bundling and testing the
 application using [Pottery](/) and [jUnit 5](https://junit.org/junit5/).
