@@ -20,6 +20,7 @@ public record MavenDependency(
         Optional<String> classifier
 ) implements Comparable<MavenDependency> {
     private static final Pattern VERSION_PATTERN = Pattern.compile("(?<major>\\d+)\\.(?<minor>\\d+)(\\.(?<patch>\\d+)).*?");
+    private static final Pattern IS_RANGE = Pattern.compile("[(\\[].+,.+[)\\]]");
 
     public String qualifiedName() {
         return "%s:%s".formatted(groupId, artifactId);
@@ -33,6 +34,13 @@ public record MavenDependency(
         return this;
     }
 
+    public String decidedVersion() {
+        if (IS_RANGE.asMatchPredicate().test(version)) {
+            return version.split(",")[1].trim().replace("]", "").replace(")", "");
+        }
+
+        return version;
+    }
     public boolean isSnapshot() {
         return version.endsWith("-SNAPSHOT");
     }
@@ -65,7 +73,7 @@ public record MavenDependency(
             return false;
         }
 
-        return thisPatch >= otherPatch;
+        return true;
     }
 
     public MavenDependency max(MavenDependency dependency) {

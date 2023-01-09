@@ -171,7 +171,7 @@ public final class DependencyDownloadWorker implements Runnable {
                 doForEachDependency(dependencyManagementDependencies, context, dependency -> pomContextRegistry.addVersionSuggestion(
                         context,
                         dependency.qualifiedName(),
-                        dependency.version()
+                        dependency.decidedVersion()
                 ));
             }
 
@@ -186,7 +186,7 @@ public final class DependencyDownloadWorker implements Runnable {
         } catch (FileNotFoundException e) {
             return new TransitiveDependencies(Optional.empty(), Collections.emptyList());
         } catch (Throwable e) {
-            Log.getInstance().error("Could not download dependency %s:%s:%s POM file from %s.", e, mavenDependency.groupId(), mavenDependency.artifactId(), mavenDependency.version(), pomDownloadUrl(mavenDependency));
+            Log.getInstance().error("Could not download dependency %s:%s:%s POM file from %s.", e, mavenDependency.groupId(), mavenDependency.artifactId(), mavenDependency.decidedVersion(), pomDownloadUrl(mavenDependency));
             return new TransitiveDependencies(Optional.empty(), Collections.emptyList());
         }
     }
@@ -247,7 +247,7 @@ public final class DependencyDownloadWorker implements Runnable {
             );
             var downloadDuration = Timing.getInstance().end(dependency.toString());
 
-            Log.getInstance().info("Downloaded %s:%s:%s:%s for %s in %s.", dependency.groupId(), dependency.artifactId(), dependency.version(), dependency.qualifier(), dependency.scope().reason(), downloadDuration);
+            Log.getInstance().info("Downloaded %s:%s:%s:%s for %s in %s.", dependency.groupId(), dependency.artifactId(), dependency.decidedVersion(), dependency.qualifier(), dependency.scope().reason(), downloadDuration);
 
         } catch (Throwable e) {
             throw new RuntimeException(e);
@@ -258,8 +258,8 @@ public final class DependencyDownloadWorker implements Runnable {
         return "https://repo1.maven.org/maven2/%s/%s/%s/%s".formatted(
                 dependency.groupId().replaceAll("\\.", "/"),
                 dependency.artifactId(),
-                dependency.version(),
-                "%s-%s%s.%s".formatted(dependency.artifactId(), dependency.version(), dependency.classifier().map(e -> "-" + e).orElse(""), dependency.qualifier())
+                dependency.decidedVersion(),
+                "%s-%s%s.%s".formatted(dependency.artifactId(), dependency.decidedVersion(), dependency.classifier().map(e -> "-" + e).orElse(""), dependency.qualifier())
         );
     }
 
@@ -275,8 +275,8 @@ public final class DependencyDownloadWorker implements Runnable {
             String externalUrlOfPom = "https://repo1.maven.org/maven2/%s/%s/%s/%s".formatted(
                     dependency.groupId().replaceAll("\\.", "/"),
                     dependency.artifactId(),
-                    dependency.version(),
-                    "%s-%s%s.pom".formatted(dependency.artifactId(), dependency.version(), dependency.classifier().map(e -> "-" + e).orElse(""))
+                    dependency.decidedVersion(),
+                    "%s-%s%s.pom".formatted(dependency.artifactId(), dependency.decidedVersion(), dependency.classifier().map(e -> "-" + e).orElse(""))
             );
 
             try {

@@ -54,9 +54,9 @@ public final class DownloadManager {
         var qname = dependency.qualifiedName();
         var versionsOfDep = foundVersionsPerArtifact.getOrDefault(qname, new HashSet<>());
 
-        if (versionsOfDep.stream().noneMatch(e -> e.version().equals(dependency.version()))) {
+        if (versionsOfDep.stream().noneMatch(e -> e.decidedVersion().equals(dependency.version()))) {
             if (!versionsOfDep.isEmpty()) {
-                if (versionsOfDep.size() > 1 || !versionsOfDep.stream().toList().get(0).version().equals(dependency.version())) {
+                if (versionsOfDep.size() > 1 || !versionsOfDep.stream().toList().get(0).decidedVersion().equals(dependency.decidedVersion())) {
                     // warning!
                     Log.getInstance().warn("Using multiple versions of %s:%s", dependency.groupId(), dependency.artifactId());
                 }
@@ -105,8 +105,8 @@ public final class DownloadManager {
                 "m2",
                 dependency.groupId(),
                 dependency.artifactId(),
-                dependency.version(),
-                "%s-%s%s.%s".formatted(dependency.artifactId(), dependency.version(), dependency.classifier().map(e -> "-" + e).orElse(""), dependency.qualifier())
+                dependency.decidedVersion(),
+                "%s-%s%s.%s".formatted(dependency.artifactId(), dependency.decidedVersion(), dependency.classifier().map(e -> "-" + e).orElse(""), dependency.qualifier())
         );
     }
 
@@ -116,8 +116,8 @@ public final class DownloadManager {
                 "m2",
                 dependency.groupId(),
                 dependency.artifactId(),
-                dependency.version(),
-                "%s-%s.pom".formatted(dependency.groupId(), dependency.artifactId(), dependency.version())
+                dependency.decidedVersion(),
+                "%s-%s.pom".formatted(dependency.groupId(), dependency.artifactId(), dependency.decidedVersion())
         );
     }
 }

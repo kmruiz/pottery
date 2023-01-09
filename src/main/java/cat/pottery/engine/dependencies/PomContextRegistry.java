@@ -27,7 +27,7 @@ public final class PomContextRegistry {
     }
 
     public String contextIdFor(MavenDependency mavenDependency) {
-        return ID_FORMAT.formatted(mavenDependency.groupId(), mavenDependency.artifactId(), mavenDependency.version());
+        return ID_FORMAT.formatted(mavenDependency.groupId(), mavenDependency.artifactId(), mavenDependency.decidedVersion());
     }
 
     public String contextIdFor(String group, String artifact, String version) {
