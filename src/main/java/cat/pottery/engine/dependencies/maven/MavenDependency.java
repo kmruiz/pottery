@@ -102,9 +102,11 @@ public record MavenDependency(
     public int compareTo(MavenDependency o) {
         if (max(o) == this) {
             return -1;
+        } else if (max(o) == o) {
+            return 1;
         }
 
-        return 1;
+        return 0;
     }
 
     public boolean isNotVersioned() {

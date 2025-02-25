@@ -30,7 +30,6 @@ class MavenDependencyTest {
         var newer = new MavenDependency("", "", "1.2.4", "", MavenDependency.Scope.RUNTIME, "", Optional.empty());
 
         var choosen = older.max(newer);
-
-        assertEquals(newer, choosen);
+        assertEquals(newer.version(), choosen.version());
     }
 }

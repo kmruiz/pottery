@@ -107,7 +107,6 @@ public final class IncrementalCompiler {
                 output
         ));
         cmd.addAll(filesToCompile.stream().map(e -> e.javaClass.toString()).toList());
-
         try {
             return Runtime.getRuntime().exec(cmd.toArray(String[]::new));
         } catch (IOException e) {

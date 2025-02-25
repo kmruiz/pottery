@@ -9,7 +9,21 @@ A simple build system for Java.
 ## TL;DR
 
 How does a basic pottery definition look like? Well, this repository is already built and released using pottery! You can
-take a look at a real, working pottery definition [opening the pottery.yaml file](./pottery.yaml).
+take a look at a real, working pottery definition [opening the pottery.yaml file](./pottery.yaml). However, if you are busy, this is
+it:
+
+```yml
+artifact:
+  dependencies: []
+  group: group
+  id: id
+  manifest: {main-class: Main}
+  platform:
+    produces: [fatjar]
+    version: '21'
+  version: 1.0.0
+parameters: {}
+```
 
 ## Why pottery?
 
@@ -30,7 +44,7 @@ Pottery aims to lower the complexity of managing a Java project by building on t
 
 ## How to Start
 
-**Pottery requires at least Java 17 (the latest LTS) to run. You can download the OpenJDK 17 from [Adoptium](https://adoptium.net/).**
+**Pottery requires at least Java 21 to run. You can download the OpenJDK 21 from [Adoptium](https://adoptium.net/).**
 
 Download the latest version of the pottery wrapper with curl and add execution rights.
 
@@ -38,10 +52,10 @@ Download the latest version of the pottery wrapper with curl and add execution r
 curl -s -L https://github.com/kmruiz/pottery/releases/latest/download/pottery.sh > pottery.sh && chmod +x pottery.sh
 ```
 
-And initialise a project for the JDK 18.
+And initialise a project for the JDK 21.
 
 ```shell
-./pottery.sh init example-project group id 1.0.0 -j 18 -p fatjar
+./pottery.sh init example-project group id 1.0.0 -j 21 -p fatjar
 cp pottery.sh example-project/
 cd example-project
 ```
